@@ -89,7 +89,10 @@ const studentAttendanceData = {
     "2025-11-07",
     "2025-11-14",
     "2025-11-28",
-    "2025-12-05"
+    "2025-12-05",
+    "2026-01-02",
+    "2026-01-09",
+    "2026-01-16"
   ],
   "attendance": {
     "S001": {
@@ -118,7 +121,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "recording",
       "2025-11-28": "recording",
-      "2025-12-05": "recording"
+      "2025-12-05": "recording",
+      "2026-01-16": "recording",
+      "2026-01-09": "recording"
     },
     "S002": {
       "2025-06-01": "present",
@@ -144,7 +149,8 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-09": "present"
     },
     "S003": {
       "2025-06-01": "absent",
@@ -173,7 +179,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "recording",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-09": "present",
+      "2026-01-02": "present"
     },
     "S004": {
       "2025-06-01": "present",
@@ -202,7 +210,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "recording",
       "2025-11-28": "recording",
-      "2025-12-05": "absent"
+      "2025-12-05": "absent",
+      "2026-01-16": "recording",
+      "2026-01-09": "recording"
     },
     "S005": {
       "2025-06-01": "present",
@@ -231,7 +241,10 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present",
+      "2026-01-09": "present",
+      "2026-01-02": "present"
     },
     "S006": {
       "2025-06-01": "absent",
@@ -285,7 +298,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present",
+      "2026-01-09": "present"
     },
     "S008": {
       "2025-06-01": "present",
@@ -313,7 +328,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "absent",
+      "2026-01-09": "present"
     },
     "S009": {
       "2025-06-20": "present",
@@ -327,7 +344,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present",
+      "2026-01-09": "present"
     },
     "S010": {
       "2025-05-02": "present",
@@ -340,7 +359,9 @@ const studentAttendanceData = {
       "2025-11-07": "recording",
       "2025-11-14": "present",
       "2025-11-28": "absent",
-      "2025-12-05": "recording"
+      "2025-12-05": "recording",
+      "2026-01-16": "recording",
+      "2026-01-09": "recording"
     },
     "S011": {
       "2025-05-09": "absent",
@@ -352,7 +373,8 @@ const studentAttendanceData = {
       "2025-05-30": "present",
       "2025-11-07": "present",
       "2025-11-14": "recording",
-      "2025-11-28": "present"
+      "2025-11-28": "present",
+      "2026-01-16": "absent"
     },
     "S013": {
       "2025-06-20": "present",
@@ -364,7 +386,9 @@ const studentAttendanceData = {
       "2025-11-07": "recording",
       "2025-11-14": "present",
       "2025-12-05": "recording",
-      "2025-11-28": "recording"
+      "2025-11-28": "recording",
+      "2026-01-16": "present",
+      "2026-01-09": "recording"
     },
     "S014": {
       "2025-06-20": "recording",
@@ -387,7 +411,8 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present"
     },
     "S016": {
       "2025-06-20": "present",
@@ -400,7 +425,8 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present"
     },
     "S017": {
       "2025-06-20": "present",
@@ -413,7 +439,9 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-11-14": "present",
       "2025-11-28": "present",
-      "2025-12-05": "recording"
+      "2025-12-05": "recording",
+      "2026-01-16": "recording",
+      "2026-01-09": "present"
     },
     "S018": {
       "2025-06-20": "present",
@@ -424,7 +452,9 @@ const studentAttendanceData = {
       "2025-06-13": "present",
       "2025-06-27": "present",
       "2025-11-07": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "present",
+      "2026-01-09": "present"
     },
     "S019": {
       "2025-06-20": "present",
@@ -435,18 +465,25 @@ const studentAttendanceData = {
       "2025-11-07": "recording",
       "2025-11-14": "present",
       "2025-12-05": "present",
-      "2025-11-28": "recording"
+      "2025-11-28": "recording",
+      "2026-01-16": "present",
+      "2026-01-09": "recording"
     },
     "S020": {
       "2025-11-07": "present",
       "2025-11-14": "recording",
-      "2025-11-28": "present"
+      "2025-11-28": "present",
+      "2026-01-16": "present",
+      "2026-01-02": "present"
     },
     "S021": {
       "2025-11-14": "present",
       "2025-11-07": "present",
       "2025-11-28": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-16": "recording",
+      "2026-01-09": "recording",
+      "2026-01-02": "recording"
     }
   }
 } as const;
