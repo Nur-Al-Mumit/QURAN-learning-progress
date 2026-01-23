@@ -92,7 +92,8 @@ const studentAttendanceData = {
     "2025-12-05",
     "2026-01-02",
     "2026-01-09",
-    "2026-01-16"
+    "2026-01-16",
+    "2026-01-23"
   ],
   "attendance": {
     "S001": {
@@ -123,7 +124,8 @@ const studentAttendanceData = {
       "2025-11-28": "recording",
       "2025-12-05": "recording",
       "2026-01-16": "recording",
-      "2026-01-09": "recording"
+      "2026-01-09": "recording",
+      "2026-01-23": "recording"
     },
     "S002": {
       "2025-06-01": "present",
@@ -181,7 +183,8 @@ const studentAttendanceData = {
       "2025-11-28": "recording",
       "2025-12-05": "present",
       "2026-01-09": "present",
-      "2026-01-02": "present"
+      "2026-01-02": "present",
+      "2026-01-23": "present"
     },
     "S004": {
       "2025-06-01": "present",
@@ -212,7 +215,8 @@ const studentAttendanceData = {
       "2025-11-28": "recording",
       "2025-12-05": "absent",
       "2026-01-16": "recording",
-      "2026-01-09": "recording"
+      "2026-01-09": "recording",
+      "2026-01-23": "recording"
     },
     "S005": {
       "2025-06-01": "present",
@@ -244,7 +248,8 @@ const studentAttendanceData = {
       "2025-12-05": "present",
       "2026-01-16": "present",
       "2026-01-09": "present",
-      "2026-01-02": "present"
+      "2026-01-02": "present",
+      "2026-01-23": "present"
     },
     "S006": {
       "2025-06-01": "absent",
@@ -269,7 +274,8 @@ const studentAttendanceData = {
       "2025-05-30": "present",
       "2025-06-27": "present",
       "2025-11-14": "present",
-      "2025-12-05": "present"
+      "2025-12-05": "present",
+      "2026-01-23": "absent"
     },
     "S007": {
       "2025-06-01": "present",
@@ -346,7 +352,8 @@ const studentAttendanceData = {
       "2025-11-28": "present",
       "2025-12-05": "present",
       "2026-01-16": "present",
-      "2026-01-09": "present"
+      "2026-01-09": "present",
+      "2026-01-23": "present"
     },
     "S010": {
       "2025-05-02": "present",
@@ -412,7 +419,8 @@ const studentAttendanceData = {
       "2025-11-14": "present",
       "2025-11-28": "present",
       "2025-12-05": "present",
-      "2026-01-16": "present"
+      "2026-01-16": "present",
+      "2026-01-23": "present"
     },
     "S016": {
       "2025-06-20": "present",
@@ -426,7 +434,8 @@ const studentAttendanceData = {
       "2025-11-14": "present",
       "2025-11-28": "present",
       "2025-12-05": "present",
-      "2026-01-16": "present"
+      "2026-01-16": "present",
+      "2026-01-23": "present"
     },
     "S017": {
       "2025-06-20": "present",
@@ -441,7 +450,8 @@ const studentAttendanceData = {
       "2025-11-28": "present",
       "2025-12-05": "recording",
       "2026-01-16": "recording",
-      "2026-01-09": "present"
+      "2026-01-09": "present",
+      "2026-01-23": "recording"
     },
     "S018": {
       "2025-06-20": "present",
@@ -454,7 +464,8 @@ const studentAttendanceData = {
       "2025-11-07": "present",
       "2025-12-05": "present",
       "2026-01-16": "present",
-      "2026-01-09": "present"
+      "2026-01-09": "present",
+      "2026-01-23": "present"
     },
     "S019": {
       "2025-06-20": "present",
@@ -467,7 +478,8 @@ const studentAttendanceData = {
       "2025-12-05": "present",
       "2025-11-28": "recording",
       "2026-01-16": "present",
-      "2026-01-09": "recording"
+      "2026-01-09": "recording",
+      "2026-01-23": "present"
     },
     "S020": {
       "2025-11-07": "present",
@@ -483,7 +495,8 @@ const studentAttendanceData = {
       "2025-12-05": "present",
       "2026-01-16": "recording",
       "2026-01-09": "recording",
-      "2026-01-02": "recording"
+      "2026-01-02": "recording",
+      "2026-01-23": "absent"
     }
   }
 } as const;
