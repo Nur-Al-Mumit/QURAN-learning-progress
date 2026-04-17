@@ -1,5 +1,6 @@
 <template>
-  <div class="flex min-h-screen bg-gray-50/50">
+  <div class="flex h-screen bg-gray-50/50 overflow-hidden">
+
     <!-- Mobile Sidebar Backdrop -->
     <div
       v-if="isSidebarOpen"
@@ -10,10 +11,11 @@
     <!-- Sidebar -->
     <aside
       :class="[
-        'fixed inset-y-0 left-0 z-50 w-(--sidebar-width) transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+        'fixed inset-y-0 left-0 z-50 w-(--sidebar-width) transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-y-0 lg:h-full',
         isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
       ]"
     >
+
       <div class="flex h-full flex-col">
         <!-- Sidebar Header (Logo) -->
         <div class="flex h-(--navbar-height) items-center px-6 border-b border-gray-100">
@@ -32,29 +34,53 @@
 
         <!-- Sidebar Footer (User Info) -->
         <div class="p-4 border-t border-gray-100">
-          <button 
-            @click="profilePictureModal = true"
-            class="w-full flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all group"
-          >
-            <div class="relative">
-              <img 
-                v-if="userInfo?.user_profile?.profile_picture"
-                :src="userInfo.user_profile.profile_picture" 
-                class="w-10 h-10 rounded-full border-2 border-white shadow-sm"
-              />
-              <div v-else class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
-                {{ userInfo?.name?.[0]?.toUpperCase() || 'U' }}
+          <div class="relative group">
+            <button 
+              class="w-full flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all group/btn"
+            >
+              <div class="relative">
+                <img 
+                  v-if="userInfo?.user_profile?.profile_picture"
+                  :src="userInfo.user_profile.profile_picture" 
+                  class="w-10 h-10 rounded-lg object-cover ring-2 ring-white shadow-sm"
+                />
+                <div v-else class="w-10 h-10 rounded-lg bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+                  {{ userInfo?.name?.[0]?.toUpperCase() || 'U' }}
+                </div>
+                <div class="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-500 border-2 border-white rounded-full"></div>
               </div>
-              <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              <div class="flex-1 min-w-0 text-left">
+                <p class="text-sm font-bold text-gray-900 truncate leading-tight">{{ userInfo?.name }}</p>
+                <p class="text-[10px] text-gray-500 truncate uppercase tracking-wider mt-0.5">Active Session</p>
               </div>
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover/btn:text-gray-600 transition-transform group-hover/btn:translate-x-0.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            </button>
+
+            <!-- Popover Menu (Above Sidebar Footer) -->
+            <div class="absolute bottom-full left-0 mb-2 w-full glass rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+               <div class="p-3 border-b border-gray-100 bg-gray-50/50">
+                  <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Account Info</p>
+                  <p class="text-xs font-semibold text-gray-700 truncate mt-1">{{ userInfo?.email }}</p>
+               </div>
+               <div class="p-1.5">
+                  <NuxtLink to="/profile" class="flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-primary-700 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Profile Details
+                  </NuxtLink>
+                  <button @click="profilePictureModal = true" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-50 hover:text-primary-700 transition-all text-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"></rect><circle cx="8.5" cy="8.5" r="1.5"></circle><polyline points="21 15 16 10 5 21"></polyline></svg>
+                    Edit Photo
+                  </button>
+                  <div class="h-px bg-gray-50 my-1 mx-2"></div>
+                  <button @click="logOut" class="w-full flex items-center gap-2.5 px-3 py-2 rounded-lg text-xs font-medium text-red-600 hover:bg-red-50 transition-all text-left">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Log Out
+                  </button>
+               </div>
             </div>
-            <div class="flex-1 min-w-0 text-left">
-              <p class="text-sm font-semibold text-gray-900 truncate">{{ userInfo?.name }}</p>
-              <p class="text-xs text-gray-500 truncate">{{ userInfo?.email }}</p>
-            </div>
-          </button>
+          </div>
         </div>
+
       </div>
     </aside>
 
@@ -95,42 +121,6 @@
               <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
               <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
             </button>
-            
-            <div class="h-6 w-px bg-gray-200 mx-1 hidden sm:block"></div>
-
-            <!-- User Menu Dropdown -->
-            <div class="relative group">
-              <button class="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 transition-all">
-                <img 
-                  v-if="userInfo?.user_profile?.profile_picture"
-                  :src="userInfo.user_profile.profile_picture" 
-                  class="w-8 h-8 rounded-lg shadow-sm ring-1 ring-gray-200"
-                />
-                <div v-else class="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-xs">
-                  {{ userInfo?.name?.[0]?.toUpperCase() || 'U' }}
-                </div>
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-gray-600 transition-colors"><polyline points="6 9 12 15 18 9"></polyline></svg>
-              </button>
-
-              <!-- Dropdown Menu -->
-              <div class="absolute right-0 top-full mt-2 w-56 glass rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
-                <div class="p-4 border-b border-gray-100">
-                  <p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Account Info</p>
-                  <p class="text-sm font-semibold text-gray-900 mt-1 truncate">{{ userInfo?.name }}</p>
-                  <p class="text-xs text-gray-500 truncate">{{ userInfo?.email }}</p>
-                </div>
-                <div class="p-2">
-                  <NuxtLink to="/profile" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                    Profile Settings
-                  </NuxtLink>
-                  <button @click="logOut" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-red-600 hover:bg-red-50 transition-all">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
-                    Sign Out
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
         </div>
       </header>
