@@ -151,20 +151,24 @@
   const logOut = async () => {
     try {
       const endpoint = "/user/logout";
-      const { data, error } = await callAuthnAxios(endpoint);
-      if (data?.data) {
-        if (process.client) {
-          document.cookie.split(";").forEach((cookie) => {
-            const [name] = cookie.split("=");
-            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-          });
-        }
-        navigateTo("/");
-      }
+      // Try to notify the server about the logout
+      await callAuthnAxios(endpoint);
     } catch (err) {
-      console.error(err);
+      console.error("Logout API failed:", err);
+    } finally {
+      // Always clear local session and redirect even if API fails
+      if (process.client) {
+        // Clear all cookies
+        document.cookie.split(";").forEach((cookie) => {
+          const [name] = cookie.split("=");
+          document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+        });
+        // Clear stores if possible (e.g. by refreshing)
+        window.location.href = "/";
+      }
     }
   };
+
 
   // Close sidebar on route change (mobile)
   const route = useRoute();

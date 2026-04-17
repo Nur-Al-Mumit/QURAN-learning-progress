@@ -1,16 +1,18 @@
 import { useAdminAuthStore } from "~/stores/adminAuthStore";
 
 export async function callAdminAuthnAxios(api, payLoad, headers) {
+    const authStore = useAdminAuthStore();
+    const tokenType = authStore.loggedInData?.token_type || 'Bearer';
+    const accessToken = authStore.loggedInData?.access_token || '';
 
-    const { loggedInData: { token_type, access_token } } = useAdminAuthStore();
-
-    const config = headers === undefined ? ref({
+    const config = headers === undefined ? {
         headers: {
-            'Authorization': `${token_type} ${access_token}`
+            'Authorization': `${tokenType} ${accessToken}`
         }
-    }) : headers;
+    } : headers;
 
-    const { data, errorMessage } = await callAxios(api, payLoad, config.value)
 
-    return { data, errorMessage }
+    const { data, error } = await callAxios(api, payLoad, config)
+
+    return { data, error }
 }
