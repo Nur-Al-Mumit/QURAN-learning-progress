@@ -4,34 +4,54 @@
   --breakpoint-3xl: 1600px;
   --breakpoint-4xl: 2100px;
 
-  --color-primary: #065f46;
-  --color-primary-hover: #022c22;
+  /* Brand Colors - Professional Quran Learning Theme */
+  --color-primary-50: #f0fdf4;
+  --color-primary-100: #dcfce7;
+  --color-primary-200: #bbf7d0;
+  --color-primary-300: #86efac;
+  --color-primary-400: #4ade80;
+  --color-primary-500: #22c55e;
+  --color-primary-600: #16a34a;
+  --color-primary-700: #15803d;
+  --color-primary-800: #166534;
+  --color-primary-900: #14532d;
+  --color-primary-950: #052e16;
 
-  --animate-fade-in-up: fade-in-up 0.7s ease forwards;
+  --color-secondary-50: #fff7ed;
+  --color-secondary-500: #f97316;
+  --color-secondary-600: #ea580c;
+
+  /* Layout Variables */
+  --sidebar-width: 280px;
+  --navbar-height: 64px;
+
+  --animate-fade-in-up: fade-in-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  --animate-slide-in-right: slide-in-right 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 
   @keyframes fade-in-up {
     0% {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(10px);
     }
-
     100% {
       opacity: 1;
       transform: translateY(0);
     }
   }
+
+  @keyframes slide-in-right {
+    0% {
+      opacity: 0;
+      transform: translateX(-20px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
 }
 
-/*
-  The default border color has changed to `currentcolor` in Tailwind CSS v4,
-  so we've added these compatibility styles to make sure everything still
-  looks the same as it did with Tailwind CSS v3.
-
-  If we ever want to remove these styles, we need to add an explicit border
-  color utility to any element that depends on these defaults.
-*/
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -48,75 +68,60 @@
       url("../fonts/kalpurush.ttf") format("truetype");
   }
 
+  /* Using Inter for a clean, professional look */
   @font-face {
-    font-family: Roboto;
-    src: url(../fonts/Roboto-Regular.ttf) format('truetype'),
-      url(../fonts/Roboto-Medium.ttf) format('truetype'),
-      url(../fonts/Roboto-Bold.ttf) format('truetype'), ;
+    font-family: 'Inter';
+    font-style: normal;
+    font-weight: 100 900;
+    font-display: swap;
+    src: url('https://fonts.gstatic.com/s/inter/v13/UcCO3FwrK3iLTeHuS_fvQtMwCp50KnMw2boKoduKmMEVuLyfAZ9hiA.woff2') format('woff2');
   }
 
   body {
-    font-family: 'Roboto', 'kalpurush';
+    font-family: 'Inter', 'kalpurush', system-ui, -apple-system, sans-serif;
+    @apply bg-gray-50 text-gray-900 antialiased selection:bg-primary-100 selection:text-primary-900;
+  }
+}
+
+@layer components {
+  /* Scrollbar Styling */
+  .custom-scrollbar::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .custom-scrollbar::-webkit-scrollbar-thumb {
+    @apply bg-gray-200 rounded-full hover:bg-gray-300 transition-colors;
+  }
+
+  /* Glassmorphism */
+  .glass {
+    @apply bg-white/80 backdrop-blur-md border border-white/20;
+  }
+
+  /* Card Styles */
+  .pro-card {
+    @apply bg-white border border-gray-100 rounded-2xl shadow-sm hover:shadow-md transition-all duration-300;
   }
 }
 
 @utility base-trans {
-  @apply transition-all duration-300;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility base-blank-btn {
-  @apply border border-blue-500 px-5 py-2 text-blue-500 font-bold cursor-pointer hover:bg-blue-500 base-trans hover:text-white flex gap-1 rounded-sm;
-
-  /* Dynamic input form's utility design */
+  @apply transition-all duration-300 ease-in-out;
 }
 
 @utility base-width {
-  @apply w-[95%] sm:w-[80%] 3xl:w-[70%] 4xl:w-[50%] mx-auto;
-
-  /* Dynamic input form's utility design */
+  @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
 }
 
-@utility job-search-input-container {
-  @apply flex items-center bg-gray-100 pl-1 sm:pl-3 w-full;
-
-  /* Dynamic input form's utility design */
+/* Button Variants */
+@utility btn-primary {
+  @apply inline-flex items-center justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-xl text-white bg-primary-600 hover:bg-primary-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 base-trans;
 }
 
-@utility job-search-input {
-  @apply bg-gray-100 text-[16px] sm:text-xl pl-1 py-2 w-full focus:outline-hidden rounded-r-full;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility doc-upload-layout {
-  @apply my-3 p-2 border rounded-md sm:flex justify-between space-y-5 sm:space-y-0 gap-3;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility recruitment-form-container {
-  @apply bg-white p-2 sm:p-6 shadow-md animate-fade-in-up;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility dynamic-inputs-row {
-  /* Dynamic input form's utility design */
-  @apply my-10 bg-white border border-gray-400 rounded-sm;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility dynamic-action-container {
-  @apply sm:absolute top-3 right-3 flex gap-2 flex-row-reverse justify-between items-center;
-
-  /* Dynamic input form's utility design */
-}
-
-@utility dynamic-action-edit-btn {
-  @apply base-blank-btn w-fit text-center text-blue-600 hover:bg-blue-600 border-blue-600 items-center px-2;
-
-  /* Dynamic input form's utility design */
+@utility btn-secondary {
+  @apply inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-xl text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 base-trans;
 }

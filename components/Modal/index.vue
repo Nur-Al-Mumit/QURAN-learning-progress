@@ -61,16 +61,22 @@
     (newValue) => {
       if (newValue) {
         openModal();
-        // document.body.style.overflow = "hidden";
+        if (process.client) {
+          document.body.style.overflow = "hidden";
+        }
         nextTick(() => {
           isAnimating.value = true;
         });
       } else {
         handleClose();
         isAnimating.value = false;
-        setTimeout(() => {
-          document.body.style.overflow = "";
-        }, 300); // Wait for animation to complete
+        if (process.client) {
+          setTimeout(() => {
+            if (document?.body) {
+              document.body.style.overflow = "";
+            }
+          }, 300); // Wait for animation to complete
+        }
       }
     },
     { immediate: true }
@@ -81,11 +87,18 @@
   });
 
   onMounted(() => {
-    document.addEventListener("keydown", handleEscKey);
+    if (process.client) {
+      document.addEventListener("keydown", handleEscKey);
+    }
   });
 
   onBeforeUnmount(() => {
-    document.removeEventListener("keydown", handleEscKey);
-    document.body.style.overflow = "";
+    if (process.client) {
+      document.removeEventListener("keydown", handleEscKey);
+      if (document?.body) {
+        document.body.style.overflow = "";
+      }
+    }
   });
+
 </script>

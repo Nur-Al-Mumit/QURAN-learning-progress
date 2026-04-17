@@ -1,11 +1,190 @@
 <template>
-  <div>
-    <div class="pb-12">
-      <Navbar />
+  <div class="flex min-h-screen bg-gray-50/50">
+    <!-- Mobile Sidebar Backdrop -->
+    <div
+      v-if="isSidebarOpen"
+      class="fixed inset-0 z-40 bg-gray-900/50 backdrop-blur-sm lg:hidden"
+      @click="isSidebarOpen = false"
+    ></div>
+
+    <!-- Sidebar -->
+    <aside
+      :class="[
+        'fixed inset-y-0 left-0 z-50 w-(--sidebar-width) transform bg-white border-r border-gray-200 transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0',
+        isSidebarOpen ? 'translate-x-0' : '-translate-x-full'
+      ]"
+    >
+      <div class="flex h-full flex-col">
+        <!-- Sidebar Header (Logo) -->
+        <div class="flex h-(--navbar-height) items-center px-6 border-b border-gray-100">
+          <NuxtLink to="/" class="flex items-center gap-3">
+             <img src="~/assets/imgs/logo.png" alt="Logo" class="w-10 h-10 rounded-xl shadow-sm" />
+             <span class="text-xl font-bold bg-gradient-to-r from-primary-800 to-primary-600 bg-clip-text text-transparent">
+               এসো কুরআন শিখি
+             </span>
+          </NuxtLink>
+        </div>
+
+        <!-- Sidebar Navigation -->
+        <nav class="flex-1 overflow-y-auto py-6 px-4 custom-scrollbar">
+          <SidebarSideBarItems :links="menuStore.links" />
+        </nav>
+
+        <!-- Sidebar Footer (User Info) -->
+        <div class="p-4 border-t border-gray-100">
+          <button 
+            @click="profilePictureModal = true"
+            class="w-full flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all group"
+          >
+            <div class="relative">
+              <img 
+                v-if="userInfo?.user_profile?.profile_picture"
+                :src="userInfo.user_profile.profile_picture" 
+                class="w-10 h-10 rounded-full border-2 border-white shadow-sm"
+              />
+              <div v-else class="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 font-bold">
+                {{ userInfo?.name?.[0]?.toUpperCase() || 'U' }}
+              </div>
+              <div class="absolute -bottom-1 -right-1 w-5 h-5 bg-white rounded-full shadow-sm flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" class="text-primary-600"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path><circle cx="12" cy="13" r="4"></circle></svg>
+              </div>
+            </div>
+            <div class="flex-1 min-w-0 text-left">
+              <p class="text-sm font-semibold text-gray-900 truncate">{{ userInfo?.name }}</p>
+              <p class="text-xs text-gray-500 truncate">{{ userInfo?.email }}</p>
+            </div>
+          </button>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content Area -->
+    <div class="flex flex-1 flex-col min-w-0 overflow-hidden">
+      <header class="h-(--navbar-height) glass sticky top-0 z-30 flex items-center px-4 lg:px-8 border-b border-gray-200/50 justify-between">
+        <div class="flex items-center gap-4">
+          <button 
+            @click="isSidebarOpen = true"
+            class="p-2 -ml-2 text-gray-600 hover:text-primary-600 lg:hidden rounded-xl hover:bg-gray-100 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+          </button>
+          
+          <!-- Breadcrumbs or Page Title -->
+          <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500 font-medium">
+            <span>App</span>
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polyline points="9 18 15 12 9 6"></polyline></svg>
+            <span class="text-gray-900">{{ $route.name || 'Dashboard' }}</span>
+          </div>
+        </div>
+
+        <div class="flex items-center gap-2 md:gap-5">
+          <!-- Search Bar (Desktop) -->
+          <div class="relative hidden md:block">
+            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
+              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+            </span>
+            <input 
+              type="text" 
+              placeholder="Search..." 
+              class="bg-gray-100/50 border-0 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary-500 w-64 transition-all focus:bg-white focus:shadow-sm"
+            />
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 rounded-xl transition-all relative">
+              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
+              <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+            </button>
+            
+            <div class="h-6 w-px bg-gray-200 mx-1 hidden sm:block"></div>
+
+            <!-- User Menu Dropdown -->
+            <div class="relative group">
+              <button class="flex items-center gap-2 p-1 rounded-xl hover:bg-gray-100 transition-all">
+                <img 
+                  v-if="userInfo?.user_profile?.profile_picture"
+                  :src="userInfo.user_profile.profile_picture" 
+                  class="w-8 h-8 rounded-lg shadow-sm ring-1 ring-gray-200"
+                />
+                <div v-else class="w-8 h-8 rounded-lg bg-primary-100 flex items-center justify-center text-primary-700 font-bold text-xs">
+                  {{ userInfo?.name?.[0]?.toUpperCase() || 'U' }}
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover:text-gray-600 transition-colors"><polyline points="6 9 12 15 18 9"></polyline></svg>
+              </button>
+
+              <!-- Dropdown Menu -->
+              <div class="absolute right-0 top-full mt-2 w-56 glass rounded-2xl shadow-xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+                <div class="p-4 border-b border-gray-100">
+                  <p class="text-xs font-bold text-gray-400 tracking-widest uppercase">Account Info</p>
+                  <p class="text-sm font-semibold text-gray-900 mt-1 truncate">{{ userInfo?.name }}</p>
+                  <p class="text-xs text-gray-500 truncate">{{ userInfo?.email }}</p>
+                </div>
+                <div class="p-2">
+                  <NuxtLink to="/profile" class="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-gray-600 hover:bg-gray-50 hover:text-gray-900 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Profile Settings
+                  </NuxtLink>
+                  <button @click="logOut" class="w-full flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-red-600 hover:bg-red-50 transition-all">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path><polyline points="16 17 21 12 16 7"></polyline><line x1="21" y1="12" x2="9" y2="12"></line></svg>
+                    Sign Out
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+
+      <!-- Page Content -->
+      <main class="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar">
+        <div class="animate-fade-in-up">
+          <slot />
+        </div>
+      </main>
     </div>
-    <slot />
-    <Footer />
+
+    <!-- Modals -->
+    <ProfilePictureUploadModal v-model:is-modal-open="profilePictureModal" />
   </div>
 </template>
 
-<script setup></script>
+<script setup>
+  const menuStore = useMenuStore();
+  const userInfoStore = useUserInfoStore();
+  
+  const isSidebarOpen = ref(false);
+  const profilePictureModal = ref(false);
+  const userInfo = computed(() => userInfoStore.userInfo);
+
+  // Logout logic
+  const logOut = async () => {
+    try {
+      const endpoint = "/user/logout";
+      const { data, error } = await callAuthnAxios(endpoint);
+      if (data?.data) {
+        if (process.client) {
+          document.cookie.split(";").forEach((cookie) => {
+            const [name] = cookie.split("=");
+            document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
+          });
+        }
+        navigateTo("/");
+      }
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // Close sidebar on route change (mobile)
+  const route = useRoute();
+  watch(() => route.path, () => {
+    isSidebarOpen.value = false;
+  });
+</script>
+
+
+<style scoped>
+/* Page transition or local styles */
+</style>
+

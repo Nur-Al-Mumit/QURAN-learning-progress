@@ -1,41 +1,51 @@
 <template>
-  <section>
+  <div class="space-y-1">
     <div v-for="(link, key) in links" :key="key">
-      <!-- v-if="!link.items" -->
       <NuxtLink
         v-if="link.link"
         :to="link.link"
+        class="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 group relative overflow-hidden"
         :class="[
-          customClass
-            ? customClass
-            : 'link relative pr-6 pl-4 mb-[3px] sm:py-2 flex items-center gap-2 base-menu font-semibold text-lg base-trans whitespace-nowrap',
+          $route.path === link.link 
+            ? 'bg-primary-50 text-primary-700 shadow-sm ring-1 ring-primary-100' 
+            : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
         ]"
       >
-        <span v-html="getIcons(link.icon, 'w-6')"></span>
-        <h2>{{ link.title }}</h2>
+        <span 
+          class="flex-shrink-0 transition-transform duration-200 group-hover:scale-110"
+          :class="[$route.path === link.link ? 'text-primary-600' : 'text-gray-400 group-hover:text-primary-500']"
+          v-html="getIcons(link.icon, 'w-5 h-5')"
+        ></span>
+        <span class="relative z-10">{{ link.title }}</span>
+        
+        <!-- Subtle active indicator -->
+        <div 
+          v-if="$route.path === link.link"
+          class="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-6 bg-primary-600 rounded-r-full"
+        ></div>
       </NuxtLink>
+
       <button
         v-else
         @click="logOut"
-        :class="[
-          customClass
-            ? customClass
-            : 'link relative pr-6 pl-4 mb-[3px] sm:py-2 flex items-center gap-2 base-menu font-semibold text-lg base-trans whitespace-nowrap',
-        ]"
+        class="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium text-gray-600 hover:bg-red-50 hover:text-red-600 transition-all duration-200 group mt-4 border-t border-gray-50 pt-6"
       >
-        <span v-html="getIcons(link.icon, 'w-6')"></span>
-        <h2>{{ link.title }}</h2>
+        <span 
+          class="flex-shrink-0 text-gray-400 group-hover:text-red-500 transition-transform duration-200 group-hover:scale-110"
+          v-html="getIcons(link.icon, 'w-5 h-5')"
+        ></span>
+        <span>{{ link.title }}</span>
       </button>
     </div>
-  </section>
+  </div>
 </template>
 
 <script setup>
   import getIcons from "./SidebarIcon";
-  // import { useAuthStore } from "~/stores/userAuthStore";
   import { useSideBarStore } from "~/stores/sideBarStore";
 
   const sideBarStore = useSideBarStore();
+  const route = useRoute();
 
   const props = defineProps({
     links: {
@@ -44,27 +54,15 @@
     },
     customClass: {
       type: String,
-      // default: "",
     },
   });
-
-  // const authStore = useAuthStore();
-  const selectedMenu = ref("");
-  const selectedSubMenu = ref(null);
-
-  function activeStyle(item, index) {
-    selectedMenu.value = item.title;
-    selectedSubMenu.value = index;
-  }
 
   const logOut = async () => {
     try {
       const endpoint = "/user/logout";
-
       const { data, error } = await callAuthnAxios(endpoint);
 
       if (data?.data) {
-        // authStore.isLoggedIn = false;
         document.cookie.split(";").forEach((cookie) => {
           const [name] = cookie.split("=");
           document.cookie = `${name}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
@@ -80,56 +78,6 @@
 </script>
 
 <style scoped>
-  /* router-link-active router-link-exact-active */
-
-  .link::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 4px;
-    height: 0%;
-    left: 0.5%;
-    background: #c8c8c8;
-    transition: transform 0.2s, height 0.2s;
-  }
-
-  .router-link-active::after {
-    content: "";
-    display: block;
-    position: absolute;
-    width: 4px;
-    height: 100%;
-    left: 0.5%;
-    background: #2d75c8;
-    transition: transform 0.2s, height 0.2s;
-  }
-
-  .link:hover::after {
-    height: 100%;
-    transition: transform 0.2s, height 0.2s;
-  }
-
-  .router-link-active {
-    color: #2d75c8;
-    background-color: #f1f2f4;
-  }
-
-  @media (max-width: 640px) {
-    .link::after {
-      width: 100%;
-      height: 4px;
-      bottom: -10%;
-    }
-    .link:hover::after {
-      height: 4px;
-      transition: transform 0.2s, height 0.2s;
-    }
-    .router-link-active::after {
-      bottom: -10%;
-      background: #2d75c8;
-      height: 4px;
-      width: 100%;
-      transition: transform 0.2s, width 0.2s;
-    }
-  }
+/* Scoped styles removed in favor of utility classes */
 </style>
+

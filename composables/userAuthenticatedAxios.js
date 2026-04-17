@@ -5,13 +5,16 @@ export async function callAuthnAxios(endpoint, payLoad, headers, method = 'post'
 
     let data = null;
     let error = {};
-    const { loggedInData: { token_type, access_token } } = useStudentAuthInfoStore();
+    const authStore = useStudentAuthInfoStore();
+    const tokenType = authStore.loggedInData?.token_type || 'Bearer';
+    const accessToken = authStore.loggedInData?.access_token || '';
 
-    const config = headers === undefined ? ref({
+    const config = headers === undefined ? {
         headers: {
-            'Authorization': `${token_type} ${access_token}`
+            'Authorization': `${tokenType} ${accessToken}`
         }
-    }) : headers;
+    } : headers;
+
 
     try {
         const response = method.toLowerCase() === 'get'

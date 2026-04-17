@@ -9,8 +9,9 @@
     id="disMenu"
     :class="[
       'absolute top-0 right-0 left-10 bottom-0 z-20 min-h-screen bg-white base-trans',
-      isOpen ? 'translate-x-0' : 'translate-x-[120%]',
+      isOpen ? 'translate-x-0' : 'translate-x-full',
     ]"
+
   >
     <div @click="toggleSelect()" class="sm:hidden fixed top-5 right-5 w-fit">
       <svg
