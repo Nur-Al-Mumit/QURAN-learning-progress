@@ -7,27 +7,26 @@
       >
         <div
           data-export-exclude
-          class="p-4 border-b print:hidden flex justify-between items-center"
+          class="p-5 border-b border-gray-100 print:hidden flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4"
         >
-          <h3 class="text-lg font-semibold">Attendance Report</h3>
+          <h3 class="text-xl font-bold text-gray-900 tracking-tight">Attendance Report</h3>
 
-          <div class="flex flex-wrap gap-3">
+          <div class="flex flex-wrap items-center gap-3">
             <button
               @click="printAttendance"
-              class="bg-orange-600 text-white px-4 py-2 rounded-lg hover:bg-orange-700 transition-colors"
+              class="flex-1 sm:flex-none px-4 py-2 bg-white text-gray-700 font-bold text-xs uppercase tracking-widest border border-gray-200 rounded-xl hover:bg-gray-50 active:scale-95 transition-all shadow-sm"
             >
               Print Report
             </button>
             <button
               @click="exportAttendanceAsJpg"
-              class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              class="flex-1 sm:flex-none px-4 py-2 bg-primary-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-primary-700 active:scale-95 transition-all shadow-sm shadow-primary-100"
             >
               Export JPG
             </button>
-            <!-- <Butt -->
             <button
               @click="showMarkAttendance = true"
-              class="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700 transition-colors"
+              class="flex-1 sm:flex-none px-4 py-2 bg-purple-600 text-white font-bold text-xs uppercase tracking-widest rounded-xl hover:bg-purple-700 active:scale-95 transition-all shadow-sm shadow-purple-100"
             >
               Mark Attendance
             </button>
@@ -78,9 +77,9 @@
                     <div class="text-sm font-medium text-gray-900">
                       {{ student.name }}
                     </div>
-                    <div class="text-sm text-gray-500">
+                    <!-- <div class="text-sm text-gray-500">
                       ID: {{ student.id }}
-                    </div>
+                    </div> -->
                   </div>
                 </td>
                 <td
