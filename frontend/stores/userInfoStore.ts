@@ -13,7 +13,7 @@ export const useUserInfoStore = defineStore(
       loading.value = true;
       try {
         const endpoint = "/users/profile";
-        const { data } = await callAdminAuthnAxios(endpoint, null, { method: 'get' });
+        const { data } = await callAdminAuthnAxios(endpoint, null, null, "get");
         userInfo.value = data;
       } catch (err) {
         error.value = err;

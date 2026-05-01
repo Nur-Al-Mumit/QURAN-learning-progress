@@ -12,7 +12,7 @@ export const useStudentAttendanceStore = defineStore(
     const fetchStudents = async () => {
       loading.value = true;
       try {
-        const { data, error } = await callAdminAuthnAxios("/users/students", null, { method: 'get' });
+        const { data, error } = await callAdminAuthnAxios("/users/students", null, null, "get");
         if (data) {
           students.value = data.map(s => ({
             id: s._id,
