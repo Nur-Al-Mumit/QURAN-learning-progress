@@ -152,16 +152,25 @@
                 Insufficient data.
               </div>
               <div v-for="item in dashboardStore.attendanceHealth" :key="item.date" 
+                   @click="selectedBar = item.date"
                    class="flex-1 bg-gray-100 rounded-lg relative group cursor-help transition-all hover:bg-primary-100"
                    :style="{ height: (item.rate || 5) + '%' }">
-                 <div class="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-[9px] px-2 py-1 rounded-lg transition-all z-20 whitespace-nowrap">
+                 <div 
+                   class="absolute -top-10 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-[9px] px-2 py-1 rounded-lg transition-all z-20 whitespace-nowrap shadow-xl border border-white/10"
+                   :class="[
+                     selectedBar === item.date ? 'opacity-100 visible -translate-y-1' : 'opacity-0 invisible group-hover:opacity-100 group-hover:visible group-hover:-translate-y-1'
+                   ]"
+                 >
                     {{ item.rate }}% Attendance<br/>
                     <span class="text-gray-400">{{ item.date }}</span>
+                    <!-- Small arrow -->
+                    <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45 border-r border-b border-white/10"></div>
                  </div>
                  <div class="absolute bottom-0 left-0 right-0 bg-primary-500 rounded-lg transition-all" :style="{ height: '100%' }"></div>
               </div>
            </div>
            <p class="text-[10px] text-gray-400 font-medium text-center">Trend of last {{ dashboardStore.attendanceHealth.length }} sessions</p>
+           <p class="lg:hidden text-[9px] text-gray-400 text-center mt-1">Tap bars to view details</p>
         </div>
       </div>
      </div>
@@ -178,6 +187,7 @@
   const userInfoStore = useUserInfoStore();
   const studentAttendanceStore = useStudentAttendanceStore();
   const userInfo = computed(() => userInfoStore.userInfo);
+  const selectedBar = ref(null);
 
   const formattedDate = computed(() => {
     return new Date().toLocaleDateString('en-US', {

@@ -1040,9 +1040,9 @@
 
 <template>
   <div
-    class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center p-4"
+    class="min-h-screen bg-gradient-to-br from-blue-50 to-green-50 flex items-center justify-center"
   >
-    <div class="max-w-2xl w-full bg-white rounded-2xl shadow-lg p-6 md:p-8">
+    <div class="max-w-2xl w-full bg-white rounded-2xl md:shadow-lg md:p-8">
       <h2
         class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6 flex items-center justify-center"
       >
