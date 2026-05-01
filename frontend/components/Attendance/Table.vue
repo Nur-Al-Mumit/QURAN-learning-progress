@@ -325,6 +325,7 @@
       return;
     }
 
+    // Prepare for export: show hidden elements and ensure full width
     const elementsToToggle = Array.from(
       table.querySelectorAll("[data-export-show]")
     );
@@ -343,19 +344,28 @@
 
     try {
       const { toJpeg } = await import("html-to-image");
-      const rect = table.getBoundingClientRect();
-      const pixelRatio = Math.min(
-        3,
-        Math.max(1, (window.devicePixelRatio || 1) * 3)
-      );
+      
+      // Target the inner table for accurate width measurement
+      const innerTable = table.querySelector('table');
+      const scrollWidth = innerTable ? Math.max(innerTable.scrollWidth, table.scrollWidth) : table.scrollWidth;
+      const scrollHeight = table.scrollHeight;
+
+      // Force expansion for capture
+      const originalWidth = table.style.width;
+      const originalMaxWidth = table.style.maxWidth;
+      const originalOverflow = table.style.overflow;
+      
+      table.style.width = scrollWidth + 'px';
+      table.style.maxWidth = 'none';
+      table.style.overflow = 'visible';
 
       const dataUrl = await toJpeg(table, {
         quality: 0.95,
         cacheBust: true,
         backgroundColor: "#ffffff",
-        pixelRatio,
-        width: rect.width,
-        height: rect.height,
+        pixelRatio: 2,
+        width: scrollWidth,
+        height: scrollHeight,
         filter: (node) => {
           if (
             node instanceof Element &&
@@ -366,6 +376,11 @@
           return true;
         },
       });
+
+      // Revert styles
+      table.style.width = originalWidth;
+      table.style.maxWidth = originalMaxWidth;
+      table.style.overflow = originalOverflow;
 
       const link = document.createElement("a");
       link.download = `attendance-report-${new Date()
