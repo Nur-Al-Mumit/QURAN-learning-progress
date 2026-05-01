@@ -45,34 +45,29 @@
             >
               <div
                 v-for="date in paginatedDates"
-                :key="date"
-                class="relative p-2 bg-gradient-to-br from-blue-50 to-indigo-50 rounded-lg border border-blue-100 hover:shadow-md transition-all duration-200 group cursor-pointer"
-              >
-                <button
-                  @click="removeDate(date)"
-                  class="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-sm hover:shadow-md transition-all duration-200 z-10"
-                  title="Remove date"
-                >
-                  <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                    <path
-                      fill-rule="evenodd"
-                      d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                      clip-rule="evenodd"
-                    ></path>
-                  </svg>
-                </button>
-                <div class="text-center">
-                  <div class="text-xs font-medium text-blue-600 uppercase">
-                    {{ formatDay(date) }}
-                  </div>
-                  <div class="text-sm font-bold text-gray-800">
-                    {{ formatDateNumber(date) }}
-                  </div>
-                  <div class="text-xs text-gray-600">
-                    {{ formatMonth(date) }}
-                  </div>
+              :key="date"
+              class="relative p-3 bg-white rounded-2xl border border-gray-100 hover:border-primary-200 hover:shadow-xl hover:shadow-primary-50/50 transition-all group flex flex-col items-center text-center"
+            >
+              <div class="text-center pb-2">
+                <div class="text-[10px] font-bold text-primary-600 uppercase tracking-widest mb-1">
+                  {{ formatDay(date) }}
+                </div>
+                <div class="text-lg font-black text-gray-900 leading-none">
+                  {{ formatDateNumber(date) }}
+                </div>
+                <div class="text-[10px] text-gray-400 font-bold uppercase mt-1">
+                  {{ formatMonth(date) }}
                 </div>
               </div>
+              <div class="w-full pt-2 border-t border-gray-100 mt-auto">
+                 <button
+                  @click="removeDate(date)"
+                  class="w-full py-1.5 px-2 bg-red-50 text-red-600 rounded-lg text-[10px] font-bold uppercase hover:bg-red-600 hover:text-white transition-all active:scale-95"
+                >
+                  Remove
+                </button>
+              </div>
+            </div>
             </div>
           </div>
 
