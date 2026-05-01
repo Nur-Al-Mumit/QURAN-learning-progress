@@ -19,24 +19,26 @@ app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/class-dates', require('./routes/classDateRoutes'));
 app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
+const connectDB = require('./config/db');
+
+// Database Connection Middleware
+app.use(async (req, res, next) => {
+  try {
+    await connectDB();
+    next();
+  } catch (error) {
+    res.status(500).json({ message: 'Database connection failed' });
+  }
+});
+
 // Routes Placeholder
 app.get('/', (req, res) => {
   res.send('Quran Learning Progress API is running...');
 });
 
-// Database Connection
 const PORT = process.env.PORT || 5000;
-const MONGODB_URI = process.env.MONGODB_URI;
 
-mongoose.connect(MONGODB_URI)
-  .then(() => {
-    console.log('Successfully connected to MongoDB');
-  })
-  .catch((error) => {
-    console.error('Error connecting to MongoDB:', error.message);
-  });
-
-// Only listen if not running as a serverless function (optional but good for local)
+// Only listen if not running as a serverless function
 if (process.env.NODE_ENV !== 'production') {
   app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
