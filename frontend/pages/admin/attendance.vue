@@ -200,9 +200,9 @@
          link: "/admin/add-class-date",
       },
       {
-        title: "Student Roster",
+        title: "Students",
         icon: "ViewProfile",
-        link: "/admin/add-student",
+        link: "/admin/students",
       },
       {
         title: "Parent Messaging",
