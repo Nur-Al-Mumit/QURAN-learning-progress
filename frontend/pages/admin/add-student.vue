@@ -5,7 +5,11 @@
 </template>
 
 <script setup>
-  definePageMeta({ layout: "split" });
+  definePageMeta({ layout: "default" });
 
   const studentAttendanceStore = useStudentAttendanceStore();
+
+  onMounted(async () => {
+    await studentAttendanceStore.fetchStudents();
+  });
 </script>

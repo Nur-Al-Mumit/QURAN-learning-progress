@@ -45,44 +45,44 @@
             <div
               v-for="student in paginatedStudents"
               :key="student.id"
-              class="relative p-3 bg-gradient-to-br from-green-50 to-emerald-50 rounded-lg border border-green-100 hover:shadow-md base-trans group cursor-pointer"
+              class="relative p-4 bg-white rounded-2xl border border-gray-100 hover:border-primary-200 hover:shadow-xl hover:shadow-primary-50/50 transition-all group flex flex-col items-center text-center"
             >
-              <button
-                @click="removeStudent(student.id)"
-                class="absolute -top-1 -right-1 opacity-0 group-hover:opacity-100 text-red-500 hover:text-red-700 bg-white rounded-full p-1 shadow-sm hover:shadow-md base-trans z-10 cursor-pointer"
-                title="Remove student"
+              <!-- Student Avatar -->
+              <div
+                class="w-14 h-14 bg-primary-50 rounded-2xl flex items-center justify-center mb-3 group-hover:scale-110 transition-transform duration-300"
               >
-                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
-                  <path
-                    fill-rule="evenodd"
-                    d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z"
-                    clip-rule="evenodd"
-                  ></path>
-                </svg>
-              </button>
+                <span class="text-primary-700 font-bold text-xl">
+                  {{ getInitials(student.name) }}
+                </span>
+              </div>
 
-              <div class="text-center">
-                <!-- Student Avatar -->
-                <div
-                  class="w-12 h-12 bg-green-200 rounded-full flex items-center justify-center mb-2 mx-auto"
+              <!-- Student Info -->
+              <div class="mb-4">
+                <p
+                  class="font-bold text-gray-900 text-sm truncate max-w-[120px]"
+                  :title="student.name"
                 >
-                  <span class="text-green-700 font-bold text-lg">
-                    {{ getInitials(student.name) }}
-                  </span>
-                </div>
+                  {{ student.name }}
+                </p>
+                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
+                  ID: {{ student.id }}
+                </p>
+              </div>
 
-                <!-- Student Info -->
-                <div>
-                  <p
-                    class="font-medium text-gray-800 text-sm truncate"
-                    :title="student.name"
-                  >
-                    {{ student.name }}
-                  </p>
-                  <p class="text-xs text-gray-600 mt-1">
-                    {{ student.id }}
-                  </p>
-                </div>
+              <!-- Action Buttons -->
+              <div class="w-full flex gap-2 pt-2 border-t border-gray-100 mt-auto">
+                <button
+                  @click="openEditModal(student)"
+                  class="flex-1 py-1.5 px-2 bg-primary-50 text-primary-700 rounded-lg text-[10px] font-bold uppercase hover:bg-primary-600 hover:text-white transition-all active:scale-95"
+                >
+                  Update
+                </button>
+                <button
+                  @click="removeStudent(student.id)"
+                  class="flex-1 py-1.5 px-2 bg-red-50 text-red-600 rounded-lg text-[10px] font-bold uppercase hover:bg-red-600 hover:text-white transition-all active:scale-95"
+                >
+                  Remove
+                </button>
               </div>
             </div>
           </div>
@@ -104,7 +104,7 @@
   <Modal v-model:is-open="showAddStudent">
     <template #header>
       <h3 class="text-lg font-semibold text-center p-5 pb-0">
-        Add New Student
+        {{ isEditing ? 'Update Student' : 'Add New Student' }}
       </h3>
     </template>
     <template #body>
@@ -115,19 +115,19 @@
         <input
           v-model="newStudentName"
           type="text"
-          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
-          placeholder="Enter student name"
-          @keyup.enter="addStudent"
+          class="w-full border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500"
+          :placeholder="isEditing ? 'Update student name' : 'Enter student name'"
+          @keyup.enter="handleSubmit"
         />
       </div>
     </template>
     <template #footer>
       <div class="flex justify-center items-center gap-3 p-5 pt-0">
         <button
-          @click="addStudent"
-          class="border border-green-600 text-green-600 hover:text-white px-4 py-2 rounded-lg hover:bg-green-600 transition-colors font-semibold cursor-pointer base-trans"
+          @click="handleSubmit"
+          class="border border-primary-600 text-primary-600 hover:text-white px-4 py-2 rounded-lg hover:bg-primary-600 transition-colors font-semibold cursor-pointer base-trans"
         >
-          Add Student
+          {{ isEditing ? 'Update' : 'Add Student' }}
         </button>
         <button
           @click="showAddStudent = false"
@@ -153,6 +153,8 @@
 
   // State
   const showAddStudent = ref(false);
+  const isEditing = ref(false);
+  const editingStudentId = ref("");
   const newStudentName = ref("");
   const searchStudent = ref("");
   const currentPage = ref(1);
@@ -160,7 +162,9 @@
 
   // Auto-focus and clear input when modal opens
   watch(showAddStudent, (isOpen) => {
-    if (isOpen) {
+    if (!isOpen) {
+      isEditing.value = false;
+      editingStudentId.value = "";
       newStudentName.value = "";
     }
   });
@@ -176,7 +180,7 @@
       .filter(
         (student) =>
           student.name.toLowerCase().includes(searchTerm) ||
-          student.id.toLowerCase().includes(searchTerm)
+          (student._id || student.id).toLowerCase().includes(searchTerm)
       )
       .sort((a, b) => a.name.localeCompare(b.name));
   });
@@ -202,30 +206,31 @@
   };
 
   const onPageChange = (page) => {
-    // Optional: Add any additional logic when page changes
     console.log(`Changed to page ${page}`);
   };
 
-  const addStudent = () => {
-    if (newStudentName.value.trim()) {
-      const newId =
-        "S" +
-        String(studentAttendanceStore.students.length + 1).padStart(3, "0");
-      studentAttendanceStore.students.push({
-        id: newId,
-        name: newStudentName.value.trim(),
-      });
-      newStudentName.value = "";
-      showAddStudent.value = false;
+  const openEditModal = (student) => {
+    isEditing.value = true;
+    editingStudentId.value = student._id || student.id;
+    newStudentName.value = student.name;
+    showAddStudent.value = true;
+  };
+
+  const handleSubmit = async () => {
+    if (!newStudentName.value.trim()) return;
+
+    if (isEditing.value) {
+      const success = await studentAttendanceStore.updateStudent(editingStudentId.value, newStudentName.value.trim());
+      if (success) showAddStudent.value = false;
+    } else {
+      const success = await studentAttendanceStore.addStudent(newStudentName.value.trim());
+      if (success) showAddStudent.value = false;
     }
   };
 
-  const removeStudent = (studentId) => {
-    if (confirm("Are you sure you want to remove this student?")) {
-      studentAttendanceStore.students = studentAttendanceStore.students.filter(
-        (student) => student.id !== studentId
-      );
-      delete studentAttendanceStore.attendance[studentId];
+  const removeStudent = async (studentId) => {
+    if (confirm("Are you sure you want to remove this student? This will also affect their attendance history.")) {
+      await studentAttendanceStore.removeStudent(studentId);
     }
   };
 </script>

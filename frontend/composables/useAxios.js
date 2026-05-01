@@ -8,9 +8,17 @@ export async function callAxios(endpoint, payload, config, method = 'post') {
   let data = null;
   let error = {};
   try {
-    const response = method.toLowerCase() === 'get'
-      ? await axios.get(url, config)
-      : await axios.post(url, payload, config);
+    let response;
+    const m = method.toLowerCase();
+    if (m === 'get') {
+      response = await axios.get(url, config);
+    } else if (m === 'put') {
+      response = await axios.put(url, payload, config);
+    } else if (m === 'delete') {
+      response = await axios.delete(url, config);
+    } else {
+      response = await axios.post(url, payload, config);
+    }
     data = response.data;
   } catch (e) {
     error = e.response?.data || e.message;

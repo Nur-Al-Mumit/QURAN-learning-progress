@@ -109,6 +109,48 @@ export const useStudentAttendanceStore = defineStore(
       return false;
     };
 
+    const addStudent = async (name: string) => {
+      try {
+        const { data } = await callAdminAuthnAxios("/users/students", { name });
+        if (data) {
+          students.value.push(data);
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to add student", err);
+      }
+      return false;
+    };
+
+    const updateStudent = async (id: string, name: string) => {
+      try {
+        const { data } = await callAdminAuthnAxios(`/users/students/${id}`, { name }, null, "put");
+        if (data) {
+          const index = students.value.findIndex(s => s._id === id || s.id === id);
+          if (index !== -1) {
+            students.value[index] = data;
+          }
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to update student", err);
+      }
+      return false;
+    };
+
+    const removeStudent = async (id: string) => {
+      try {
+        const { data } = await callAdminAuthnAxios(`/users/students/${id}`, null, null, "delete");
+        if (data) {
+          students.value = students.value.filter(s => (s._id || s.id) !== id);
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to remove student", err);
+      }
+      return false;
+    };
+
     return { 
       students, 
       classDates, 
@@ -119,7 +161,10 @@ export const useStudentAttendanceStore = defineStore(
       addClassDate,
       removeClassDate,
       fetchAttendance,
-      saveAttendance
+      saveAttendance,
+      addStudent,
+      updateStudent,
+      removeStudent
     };
   }
 );
