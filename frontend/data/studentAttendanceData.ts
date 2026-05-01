@@ -21,10 +21,6 @@ const studentAttendanceData = {
       "name": "Nur Al Mumit"
     },
     {
-      "id": "S006",
-      "name": "Mamnun"
-    },
-    {
       "id": "S007",
       "name": "Fahid"
     },
