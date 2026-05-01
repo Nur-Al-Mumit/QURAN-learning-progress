@@ -22,10 +22,19 @@ export async function callAxios(endpoint, payload, config, method = 'post') {
     data = response.data;
   } catch (e) {
     error = e.response?.data || e.message;
-    alert(error.message || "An error occurred");
-    // if (error.message === 'Unauthenticated') {
-    //   navigateTo('./')
-    // }
+    
+    if (e.response?.status === 401) {
+      // Clear admin session if exists
+      try {
+        const authStore = useAdminAuthStore();
+        authStore.logout();
+      } catch (err) {
+        // Store might not be accessible in all contexts, fallback to simple navigate
+        navigateTo('/admin/login');
+      }
+    } else {
+      alert(error.message || "An error occurred");
+    }
   }
   return { data, error };
 }

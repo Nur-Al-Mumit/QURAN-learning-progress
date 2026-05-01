@@ -12,8 +12,11 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return navigateTo('/admin/dashboard');
     }
 
-    // 2. If trying to access any admin page (except login) while NOT logged in
-    if (to.path.startsWith('/admin') && to.path !== '/admin/login' && !isLoggedIn) {
+    // 2. If trying to access any admin page OR home page (except login) while NOT logged in
+    const isAdminRoute = to.path.startsWith('/admin') && to.path !== '/admin/login';
+    const isHomeRoute = to.path === '/';
+
+    if ((isAdminRoute || isHomeRoute) && !isLoggedIn) {
         return navigateTo('/admin/login');
     }
 });
