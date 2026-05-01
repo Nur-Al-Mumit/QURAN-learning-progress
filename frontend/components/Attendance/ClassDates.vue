@@ -252,30 +252,29 @@
     console.log(`Changed to page ${page}`);
   };
 
-  const addDate = () => {
+  const addDate = async () => {
     if (
       newClassDate.value &&
       !studentAttendanceStore.classDates.includes(newClassDate.value)
     ) {
-      studentAttendanceStore.classDates.push(newClassDate.value);
-      studentAttendanceStore.classDates.sort();
-      newClassDate.value = "";
-      showAddDate.value = false;
+      const success = await studentAttendanceStore.addClassDate(newClassDate.value);
+      if (success) {
+        newClassDate.value = "";
+        showAddDate.value = false;
+      }
     }
   };
 
-  const removeDate = (date) => {
+  const removeDate = async (date) => {
     if (confirm("Are you sure you want to remove this class date?")) {
-      studentAttendanceStore.classDates =
-        studentAttendanceStore.classDates.filter((d) => d !== date);
-      // Remove attendance records for this date
-      Object.keys(studentAttendanceStore.attendance).forEach((studentId) => {
-        delete studentAttendanceStore.attendance[studentId][date];
-      });
+      const success = await studentAttendanceStore.removeClassDate(date);
+      if (success) {
+        // Attendance records on the frontend are reactive to classDates change
+      }
     }
   };
 
-  const addCurrentMonthFridays = () => {
+  const addCurrentMonthFridays = async () => {
     const currentDate = new Date();
     const currentMonth = currentDate.getMonth();
     const currentYear = currentDate.getFullYear();
@@ -295,14 +294,18 @@
     }
 
     let addedCount = 0;
-    fridays.forEach((friday) => {
+    for (const friday of fridays) {
       if (!studentAttendanceStore.classDates.includes(friday)) {
-        studentAttendanceStore.classDates.push(friday);
+        await studentAttendanceStore.addClassDate(friday);
         addedCount++;
       }
-    });
+    }
 
     studentAttendanceStore.classDates.sort();
     showAddDate.value = false;
   };
+
+  onMounted(() => {
+    studentAttendanceStore.fetchClassDates();
+  });
 </script>

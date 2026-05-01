@@ -16,6 +16,7 @@ app.use(express.json());
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/class-dates', require('./routes/classDateRoutes'));
 
 // Routes Placeholder
 app.get('/', (req, res) => {

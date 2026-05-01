@@ -27,12 +27,55 @@ export const useStudentAttendanceStore = defineStore(
       }
     };
 
+    const fetchClassDates = async () => {
+      try {
+        const { data } = await callAdminAuthnAxios("/class-dates", null, null, "get");
+        if (data) {
+          classDates.value = data;
+        }
+      } catch (err) {
+        console.error("Failed to fetch class dates", err);
+      }
+    };
+
+    const addClassDate = async (date: string) => {
+      try {
+        const { data } = await callAdminAuthnAxios("/class-dates", { date });
+        if (data) {
+          if (!classDates.value.includes(data)) {
+            classDates.value.push(data);
+            classDates.value.sort();
+          }
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to add class date", err);
+      }
+      return false;
+    };
+
+    const removeClassDate = async (date: string) => {
+      try {
+        const { data } = await callAdminAuthnAxios(`/class-dates/${date}`, null, null, "delete");
+        if (data) {
+          classDates.value = classDates.value.filter(d => d !== date);
+          return true;
+        }
+      } catch (err) {
+        console.error("Failed to remove class date", err);
+      }
+      return false;
+    };
+
     return { 
       students, 
       classDates, 
       attendance, 
       loading,
-      fetchStudents 
+      fetchStudents,
+      fetchClassDates,
+      addClassDate,
+      removeClassDate
     };
   }
 );

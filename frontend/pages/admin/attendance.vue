@@ -175,6 +175,7 @@
   // Initialize
   onMounted(async () => {
     await studentAttendanceStore.fetchStudents();
+    await studentAttendanceStore.fetchClassDates();
     
     studentAttendanceStore.students.forEach((student) => {
       if (!studentAttendanceStore.attendance[student.id]) {
