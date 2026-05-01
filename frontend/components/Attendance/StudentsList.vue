@@ -64,13 +64,13 @@
                 >
                   {{ student.name }}
                 </p>
-                <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
+                <!-- <p class="text-[10px] font-black text-gray-400 uppercase tracking-widest mt-1">
                   ID: {{ student.id }}
-                </p>
+                </p> -->
               </div>
 
               <!-- Action Buttons -->
-              <div class="w-full flex gap-2 pt-2 border-t border-gray-100 mt-auto">
+              <div class="w-full flex flex-wrap gap-2 pt-2 border-t border-gray-100 mt-auto">
                 <button
                   @click="openEditModal(student)"
                   class="flex-1 py-1.5 px-2 bg-primary-50 text-primary-700 rounded-lg text-[10px] font-bold uppercase hover:bg-primary-600 hover:text-white transition-all active:scale-95"
