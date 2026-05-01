@@ -85,45 +85,15 @@
     </aside>
 
     <!-- Main Content Area -->
-    <div class="flex flex-1 flex-col min-w-0 overflow-hidden">
-      <header class="h-(--navbar-height) glass sticky top-0 z-30 flex items-center px-4 lg:px-8 border-b border-gray-200/50 justify-between">
-        <div class="flex items-center gap-4">
-          <button 
-            @click="isSidebarOpen = true"
-            class="p-2 -ml-2 text-gray-600 hover:text-primary-600 lg:hidden rounded-xl hover:bg-gray-100 transition-colors"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-          </button>
-          
-          <!-- Breadcrumbs or Page Title -->
-          <div class="hidden sm:flex items-center gap-2 text-sm text-gray-500 font-medium">
-            <span>App</span>
-            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-300"><polyline points="9 18 15 12 9 6"></polyline></svg>
-            <span class="text-gray-900">{{ $route.name || 'Dashboard' }}</span>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 md:gap-5">
-          <!-- Search Bar (Desktop) -->
-          <div class="relative hidden md:block">
-            <span class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none text-gray-400">
-              <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-            </span>
-            <input 
-              type="text" 
-              placeholder="Search..." 
-              class="bg-gray-100/50 border-0 rounded-xl py-2.5 pl-10 pr-4 text-sm focus:ring-2 focus:ring-primary-500 w-64 transition-all focus:bg-white focus:shadow-sm"
-            />
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button class="p-2 text-gray-500 hover:text-primary-600 hover:bg-gray-100 rounded-xl transition-all relative">
-              <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path><path d="M13.73 21a2 2 0 0 1-3.46 0"></path></svg>
-              <span class="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-            </button>
-          </div>
-        </div>
-      </header>
+    <!-- Main Content Area -->
+    <div class="flex flex-1 flex-col min-w-0 overflow-hidden relative">
+      <!-- Mobile Toggle Button (Floating) -->
+      <button 
+        @click="isSidebarOpen = true"
+        class="lg:hidden fixed top-4 left-4 z-40 p-2.5 bg-white shadow-xl border border-gray-200 rounded-xl text-gray-600 hover:text-primary-600 active:scale-90 transition-all"
+      >
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
 
 
       <!-- Page Content -->
