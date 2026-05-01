@@ -12,13 +12,6 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-// Routes
-app.use('/api/auth', require('./routes/authRoutes'));
-app.use('/api/attendance', require('./routes/attendanceRoutes'));
-app.use('/api/users', require('./routes/userRoutes'));
-app.use('/api/class-dates', require('./routes/classDateRoutes'));
-app.use('/api/dashboard', require('./routes/dashboardRoutes'));
-
 const connectDB = require('./config/db');
 
 // Database Connection Middleware
@@ -27,9 +20,17 @@ app.use(async (req, res, next) => {
     await connectDB();
     next();
   } catch (error) {
-    res.status(500).json({ message: 'Database connection failed' });
+    console.error('DB Connection Middleware Error:', error);
+    res.status(500).json({ message: 'Database connection failed', error: error.message });
   }
 });
+
+// Routes
+app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/attendance', require('./routes/attendanceRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
+app.use('/api/class-dates', require('./routes/classDateRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 // Routes Placeholder
 app.get('/', (req, res) => {
