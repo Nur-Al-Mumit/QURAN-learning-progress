@@ -151,28 +151,40 @@
   const modalRef = ref(null);
   const isOpen = ref(props.isModalOpen);
   const selectedDateForAttendance = ref("");
+  const tempAttendance = ref({}); // Local buffer: { [studentId]: status }
+
+  // Initialize local buffer when date changes
+  watch(selectedDateForAttendance, (newDate) => {
+    if (newDate) {
+      const buffer = {};
+      studentAttendanceStore.students.forEach(student => {
+        buffer[student.id] = studentAttendanceStore.attendance[student.id]?.[newDate] || "";
+      });
+      tempAttendance.value = buffer;
+    } else {
+      tempAttendance.value = {};
+    }
+  });
 
   const markAttendance = (studentId, date, status) => {
-    if (!studentAttendanceStore.attendance[studentId]) {
-      studentAttendanceStore.attendance[studentId] = {};
-    }
-    studentAttendanceStore.attendance[studentId][date] = status;
+    tempAttendance.value[studentId] = status;
   };
 
   const markAllPresent = () => {
     if (!selectedDateForAttendance.value) return;
-    
     studentAttendanceStore.students.forEach(student => {
-      markAttendance(student.id, selectedDateForAttendance.value, 'present');
+      tempAttendance.value[student.id] = 'present';
     });
   };
 
   const getAttendanceStatus = (studentId, date) => {
-    return studentAttendanceStore.attendance[studentId]?.[date] || "";
+    return tempAttendance.value[studentId] || "";
   };
 
   function closeModal() {
     modalRef.value.handleClose();
+    selectedDateForAttendance.value = "";
+    tempAttendance.value = {};
   }
 
   async function saveAttendance() {
@@ -181,9 +193,21 @@
       return;
     }
     
-    const success = await studentAttendanceStore.saveAttendance(selectedDateForAttendance.value);
+    // 1. Apply local changes to the store
+    const date = selectedDateForAttendance.value;
+    Object.keys(tempAttendance.value).forEach(studentId => {
+      if (!studentAttendanceStore.attendance[studentId]) {
+        studentAttendanceStore.attendance[studentId] = {};
+      }
+      studentAttendanceStore.attendance[studentId][date] = tempAttendance.value[studentId];
+    });
+
+    // 2. Save to database
+    const success = await studentAttendanceStore.saveAttendance(date);
     if (success) {
       modalRef.value.handleClose();
+      selectedDateForAttendance.value = "";
+      tempAttendance.value = {};
     } else {
       alert("Failed to save attendance. Please try again.");
     }
