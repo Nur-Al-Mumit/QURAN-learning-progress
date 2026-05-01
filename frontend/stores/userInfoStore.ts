@@ -1,4 +1,5 @@
 import { defineStore } from "pinia";
+import { callAdminAuthnAxios } from "~/composables/adminAuthenticatedAxios";
 
 export const useUserInfoStore = defineStore(
   "UserInfoStores",
@@ -11,9 +12,9 @@ export const useUserInfoStore = defineStore(
     const getProfileInfo = async () => {
       loading.value = true;
       try {
-        const endpoint = "/user/profile-information";
-        const { data } = await callAuthnAxios(endpoint, null, null, "get");
-        userInfo.value = data.data;
+        const endpoint = "/users/profile";
+        const { data } = await callAdminAuthnAxios(endpoint, null, { method: 'get' });
+        userInfo.value = data;
       } catch (err) {
         error.value = err;
       } finally {

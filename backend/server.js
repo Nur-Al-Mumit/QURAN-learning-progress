@@ -15,6 +15,7 @@ app.use(express.json());
 // Routes
 app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
+app.use('/api/users', require('./routes/userRoutes'));
 
 // Routes Placeholder
 app.get('/', (req, res) => {

@@ -1,15 +1,38 @@
 import { defineStore } from "pinia";
-import studentAttendanceData from "@/data/studentAttendanceData";
+import { callAdminAuthnAxios } from "~/composables/adminAuthenticatedAxios";
 
 export const useStudentAttendanceStore = defineStore(
   "StudentAttendance",
   () => {
-    const clone = <T>(value: T): T =>
-      JSON.parse(JSON.stringify(value)) as T;
+    const students = ref([]);
+    const classDates = ref([]);
+    const attendance = ref({});
+    const loading = ref(false);
 
-    const students = reactive(clone(studentAttendanceData.students));
-    const classDates = reactive(clone(studentAttendanceData.classDates));
-    const attendance = reactive(clone(studentAttendanceData.attendance));
-    return { students, classDates, attendance };
+    const fetchStudents = async () => {
+      loading.value = true;
+      try {
+        const { data, error } = await callAdminAuthnAxios("/users/students", null, { method: 'get' });
+        if (data) {
+          students.value = data.map(s => ({
+            id: s._id,
+            name: s.name,
+            email: s.email
+          }));
+        }
+      } catch (err) {
+        console.error("Failed to fetch students", err);
+      } finally {
+        loading.value = false;
+      }
+    };
+
+    return { 
+      students, 
+      classDates, 
+      attendance, 
+      loading,
+      fetchStudents 
+    };
   }
 );

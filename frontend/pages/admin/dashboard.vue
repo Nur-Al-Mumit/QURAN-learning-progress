@@ -204,7 +204,9 @@
     }
   ];
 
-  onMounted(() => {
+  onMounted(async () => {
+    await userInfoStore.getProfileInfo();
+    
     // Set Professional Menu for Teacher Panel
     menuStore.links = [
       {
