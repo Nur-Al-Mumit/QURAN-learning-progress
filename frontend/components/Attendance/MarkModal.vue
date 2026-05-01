@@ -24,6 +24,18 @@
               </option>
             </select>
           </div>
+          
+          <div v-if="selectedDateForAttendance" class="mb-4 flex justify-end">
+            <button 
+              @click="markAllPresent"
+              class="text-xs font-bold text-green-600 border border-green-200 bg-green-50 px-3 py-1.5 rounded-lg hover:bg-green-600 hover:text-white transition-all flex items-center gap-1.5"
+            >
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-4 h-4">
+                <path fill-rule="evenodd" d="M16.403 12.652a.5.5 0 0 1 0 .696l-3.75 3.75a.5.5 0 0 1-.696 0l-3.75-3.75a.5.5 0 0 1 .696-.696L12 15.054V7a.5.5 0 0 1 1 0v8.054l2.707-2.707a.5.5 0 0 1 .696 0ZM4 5a1 1 0 0 1 1-1h10a1 1 0 1 1 0 2H5a1 1 0 0 1-1-1Z" clip-rule="evenodd" />
+              </svg>
+              Mark All Present
+            </button>
+          </div>
         </section>
       </template>
       <template #body>
@@ -145,6 +157,14 @@
       studentAttendanceStore.attendance[studentId] = {};
     }
     studentAttendanceStore.attendance[studentId][date] = status;
+  };
+
+  const markAllPresent = () => {
+    if (!selectedDateForAttendance.value) return;
+    
+    studentAttendanceStore.students.forEach(student => {
+      markAttendance(student.id, selectedDateForAttendance.value, 'present');
+    });
   };
 
   const getAttendanceStatus = (studentId, date) => {
