@@ -17,9 +17,6 @@
           <span>Updated Real-time</span>
         </div>
       </div>
-      <div class="flex gap-2">
-        <button class="btn-secondary text-xs py-2 px-3">Mark Bulk</button>
-      </div>
     </div>
 
     <!-- Filter Controls Card -->

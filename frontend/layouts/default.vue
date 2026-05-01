@@ -105,16 +105,27 @@
     <div class="flex flex-1 flex-col min-w-0 overflow-hidden relative">
       
       <!-- Top Mobile Navbar (Clean) -->
-      <header class="lg:hidden h-16 bg-white border-b border-gray-100 flex items-center px-4 shrink-0">
+      <header class="lg:hidden h-16 bg-white border-b border-gray-100 flex items-center px-4 shrink-0 relative">
+        <!-- Sidebar Toggle (Left) -->
         <button 
           @click="isSidebarOpen = true"
-          class="p-2 rounded-xl text-gray-500 hover:bg-gray-50 active:scale-90 transition-all"
+          class="p-2 rounded-xl text-gray-500 hover:bg-gray-50 active:scale-90 transition-all z-20"
         >
           <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
         </button>
+
+        <!-- Centered Title -->
+        <div class="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-10 w-full flex justify-center pointer-events-none px-16">
+          <span class="text-sm md:text-base font-bold bg-gradient-to-r from-primary-800 to-primary-600 bg-clip-text text-transparent truncate">
+            এসো কুরআন শিখি
+          </span>
+        </div>
+
         <div class="flex-1"></div>
-        <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-[10px] font-bold text-primary-700 border border-primary-100">
-           {{ userInfo?.name?.[0]?.toUpperCase() }}
+
+        <!-- Logo (Right) -->
+        <div class="z-20">
+          <img src="~/assets/imgs/logo.png" alt="Logo" class="w-8 h-8 rounded-lg shadow-sm" />
         </div>
       </header>
 
