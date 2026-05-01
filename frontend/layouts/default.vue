@@ -140,33 +140,18 @@
 </template>
 
 <script setup>
+  import { useAdminAuthStore } from '~/stores/adminAuthStore';
   const menuStore = useMenuStore();
   const userInfoStore = useUserInfoStore();
   
   const isSidebarOpen = ref(false);
   const profilePictureModal = ref(false);
+  const authStore = useAdminAuthStore();
   const userInfo = computed(() => userInfoStore.userInfo);
 
   // Logout logic
-  const logOut = async () => {
-    try {
-      const endpoint = "/user/logout";
-      // Try to notify the server about the logout
-      await callAuthnAxios(endpoint);
-    } catch (err) {
-      console.error("Logout API failed:", err);
-    } finally {
-      // Always clear local session and redirect even if API fails
-      if (process.client) {
-        // Clear all cookies
-        document.cookie.split(";").forEach((cookie) => {
-          const [name] = cookie.split("=");
-          document.cookie = `${name.trim()}=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/`;
-        });
-        // Clear stores if possible (e.g. by refreshing)
-        window.location.href = "/";
-      }
-    }
+  const logOut = () => {
+    authStore.logout();
   };
 
 

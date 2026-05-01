@@ -17,7 +17,7 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
     function logout() {
         loggedInData.value = null;
         isLoggedIn.value = false;
-        navigateTo('/login');
+        navigateTo('/admin/login');
     }
 
     return { loggedInData, isLoggedIn, login, logout }
