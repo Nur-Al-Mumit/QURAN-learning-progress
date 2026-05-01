@@ -9,6 +9,11 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
         if (data) {
             loggedInData.value = data;
             isLoggedIn.value = true;
+            
+            // Initialize menu
+            const menuStore = useMenuStore();
+            menuStore.setAdminMenu();
+            
             return { success: true };
         }
         return { success: false, error };
@@ -17,6 +22,11 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
     function logout() {
         loggedInData.value = null;
         isLoggedIn.value = false;
+        
+        // Clear menu
+        const menuStore = useMenuStore();
+        menuStore.clearMenu();
+        
         navigateTo('/admin/login');
     }
 

@@ -207,33 +207,7 @@
   onMounted(async () => {
     await userInfoStore.getProfileInfo();
     
-    // Set Professional Menu for Teacher Panel
-    menuStore.links = [
-      {
-        title: "Overview",
-        icon: "Dashboard",
-        link: "/admin/dashboard",
-      },
-      {
-        title: "Attendance Desk",
-        icon: "Circular",
-        link: "/admin/attendance",
-      },
-      {
-         title: "Schedule Class",
-         icon: "Settings",
-         link: "/admin/add-class-date",
-      },
-      {
-        title: "Students",
-        icon: "ViewProfile",
-        link: "/admin/students",
-      },
-      {
-        title: "Parent Messaging",
-        icon: "Circular",
-        link: "/admin/hw-sms",
-      },
-    ];
+    // Initialize studentAttendanceStore if needed
+    // await studentAttendanceStore.fetchStudents();
   });
 </script>
