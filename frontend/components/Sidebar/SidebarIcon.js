@@ -53,6 +53,10 @@ const navIcon =
 
 export default function getIcons(icon, style = "") {
   const iconSVG = navIcon[icon];
+  if (!iconSVG) {
+    console.warn(`Icon "${icon}" not found in navIcon.`);
+    return ""; // or return a default SVG
+  }
   const svg = iconSVG.replace('<svg', `<svg class="${style}"`);
   return svg;
 }

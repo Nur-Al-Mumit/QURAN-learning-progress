@@ -26,8 +26,8 @@ export const useMenuStore = defineStore('MenuStore', () => {
         link: "/admin/students",
       },
       {
-        title: "Parent Messaging",
-        icon: "AddContact",
+        title: "HW/SMS",
+        icon: "Circular",
         link: "/admin/hw-sms",
       }
     ];
