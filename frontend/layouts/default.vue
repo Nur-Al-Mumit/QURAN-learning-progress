@@ -33,10 +33,14 @@
         </nav>
 
         <!-- Sidebar Footer (User Info) -->
-        <div class="p-4 border-t border-gray-100">
-          <div class="relative group">
+        <div class="p-4 border-t border-gray-100 relative">
+          <div class="relative">
+            <!-- Backdrop for closing menu on click outside (Mobile friendly) -->
+            <div v-if="isProfileMenuOpen" @click="isProfileMenuOpen = false" class="fixed inset-0 z-40 lg:hidden"></div>
+
             <button 
-              class="w-full flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all group/btn"
+              @click="isProfileMenuOpen = !isProfileMenuOpen"
+              class="w-full flex items-center gap-3 p-2 rounded-xl bg-gray-50 hover:bg-gray-100 transition-all group/btn relative z-50"
             >
               <div class="relative">
                 <img 
@@ -53,11 +57,23 @@
                 <p class="text-sm font-bold text-gray-900 truncate leading-tight">{{ userInfo?.name }}</p>
                 <p class="text-[10px] text-gray-500 truncate uppercase tracking-wider mt-0.5">Active Session</p>
               </div>
-              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 group-hover/btn:text-gray-600 transition-transform group-hover/btn:translate-x-0.5"><polyline points="9 18 15 12 9 6"></polyline></svg>
+              <svg 
+                xmlns="http://www.w3.org/2000/svg" 
+                width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                class="text-gray-400 group-hover/btn:text-gray-600 transition-transform"
+                :class="{ 'rotate-180': isProfileMenuOpen }"
+              >
+                <polyline points="18 15 12 9 6 15"></polyline>
+              </svg>
             </button>
 
-            <!-- Popover Menu (Above Sidebar Footer) -->
-            <div class="absolute bottom-full left-0 mb-2 w-full glass rounded-2xl shadow-2xl border border-gray-100 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 z-50 overflow-hidden">
+            <!-- Popover Menu -->
+            <div 
+              class="absolute bottom-full left-0 mb-2 w-full glass rounded-2xl shadow-2xl border border-gray-100 transition-all duration-200 z-50 overflow-hidden"
+              :class="[
+                isProfileMenuOpen ? 'opacity-100 visible translate-y-0' : 'opacity-0 invisible translate-y-2 lg:group-hover:opacity-100 lg:group-hover:visible lg:group-hover:translate-y-0'
+              ]"
+            >
                <div class="p-3 border-b border-gray-100 bg-gray-50/50">
                   <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">Account Info</p>
                   <p class="text-xs font-semibold text-gray-700 truncate mt-1">{{ userInfo?.email }}</p>
@@ -121,6 +137,7 @@
   const userInfoStore = useUserInfoStore();
   
   const isSidebarOpen = ref(false);
+  const isProfileMenuOpen = ref(false);
   const profilePictureModal = ref(false);
   const authStore = useAdminAuthStore();
   const userInfo = computed(() => userInfoStore.userInfo);
