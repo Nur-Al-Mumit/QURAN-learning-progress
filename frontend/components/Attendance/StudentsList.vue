@@ -25,8 +25,20 @@
 
         <!-- Students Grid -->
         <div class="min-h-[200px]">
+          <!-- Loading Skeleton -->
+          <div v-if="studentAttendanceStore.loading && filteredStudents.length === 0" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 mb-6">
+            <div v-for="i in 10" :key="i" class="p-4 bg-white rounded-2xl border border-gray-100 animate-pulse flex flex-col items-center">
+              <div class="w-14 h-14 bg-gray-100 rounded-2xl mb-3"></div>
+              <div class="h-4 bg-gray-100 rounded w-20 mb-2"></div>
+              <div class="w-full flex gap-2 pt-2 border-t border-gray-50 mt-auto">
+                 <div class="flex-1 h-7 bg-gray-50 rounded-lg"></div>
+                 <div class="flex-1 h-7 bg-gray-50 rounded-lg"></div>
+              </div>
+            </div>
+          </div>
+
           <div
-            v-if="paginatedStudents.length === 0"
+            v-else-if="paginatedStudents.length === 0"
             class="text-center py-8 text-gray-500"
           >
             <p>

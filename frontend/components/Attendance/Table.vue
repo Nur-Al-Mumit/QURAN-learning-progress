@@ -37,17 +37,28 @@
             <thead class="bg-gray-50">
               <tr>
                 <th
-                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider sticky left-0 z-10 bg-gray-50"
                 >
                   Student
                 </th>
-                <th
-                  v-for="date in filteredDates"
-                  :key="date"
-                  class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-                >
-                  {{ formatDateShort(date) }}
-                </th>
+                <template v-if="studentAttendanceStore.loading && filteredDates.length === 0">
+                  <th
+                    v-for="i in 7"
+                    :key="i"
+                    class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider animate-pulse"
+                  >
+                    <div class="h-3 bg-gray-200 rounded w-10 mx-auto"></div>
+                  </th>
+                </template>
+                <template v-else>
+                  <th
+                    v-for="date in filteredDates"
+                    :key="date"
+                    class="px-2 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                  >
+                    {{ formatDateShort(date) }}
+                  </th>
+                </template>
                 <th
                   class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
                 >
@@ -71,15 +82,27 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200 overflow-hidden">
-              <tr v-for="student in filteredStudents" :key="student.id">
-                <td class="px-4 print:px-2 py-3 print:py-1.5 whitespace-nowrap">
+              <!-- Loading Skeleton -->
+              <template v-if="studentAttendanceStore.loading && filteredStudents.length === 0">
+                <tr v-for="i in 5" :key="i" class="animate-pulse">
+                  <td class="px-4 py-4 whitespace-nowrap sticky left-0 z-10 bg-white">
+                    <div class="h-4 bg-gray-200 rounded w-24"></div>
+                  </td>
+                  <td v-for="j in filteredDates.length" :key="j" class="px-2 py-4">
+                    <div class="h-4 bg-gray-100 rounded w-4 mx-auto"></div>
+                  </td>
+                  <td v-for="k in 4" :key="k" class="px-4 py-4">
+                    <div class="h-4 bg-gray-100 rounded w-8 mx-auto"></div>
+                  </td>
+                </tr>
+              </template>
+
+              <tr v-else v-for="student in filteredStudents" :key="student.id">
+                <td class="px-4 print:px-2 py-3 print:py-1.5 whitespace-nowrap sticky left-0 z-10 bg-white group-hover:bg-gray-50 transition-colors">
                   <div>
                     <div class="text-sm font-medium text-gray-900">
                       {{ student.name }}
                     </div>
-                    <!-- <div class="text-sm text-gray-500">
-                      ID: {{ student.id }}
-                    </div> -->
                   </div>
                 </td>
                 <td

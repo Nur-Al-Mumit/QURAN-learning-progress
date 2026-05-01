@@ -26,8 +26,20 @@
 
           <!-- Dates Grid -->
           <div class="min-h-[200px]">
+            <!-- Loading Skeleton -->
+            <div v-if="studentAttendanceStore.loading && filteredAndSortedDates.length === 0" class="grid grid-cols-3 md:grid-cols-6 lg:grid-cols-8 xl:grid-cols-10 gap-2 mb-6">
+              <div v-for="i in 16" :key="i" class="p-3 bg-white rounded-2xl border border-gray-100 animate-pulse flex flex-col items-center">
+                <div class="h-3 bg-gray-100 rounded w-10 mb-2"></div>
+                <div class="h-6 bg-gray-100 rounded w-8 mb-2"></div>
+                <div class="h-3 bg-gray-100 rounded w-12 mb-3"></div>
+                <div class="w-full pt-2 border-t border-gray-50 mt-auto">
+                   <div class="w-full h-6 bg-gray-50 rounded-lg"></div>
+                </div>
+              </div>
+            </div>
+
             <div
-              v-if="paginatedDates.length === 0"
+              v-else-if="paginatedDates.length === 0"
               class="text-center py-8 text-gray-500"
             >
               <p>

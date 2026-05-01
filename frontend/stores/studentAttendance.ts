@@ -28,6 +28,7 @@ export const useStudentAttendanceStore = defineStore(
     };
 
     const fetchClassDates = async () => {
+      loading.value = true;
       try {
         const { data } = await callAdminAuthnAxios("/class-dates", null, null, "get");
         if (data) {
@@ -35,6 +36,8 @@ export const useStudentAttendanceStore = defineStore(
         }
       } catch (err) {
         console.error("Failed to fetch class dates", err);
+      } finally {
+        loading.value = false;
       }
     };
 
@@ -68,6 +71,7 @@ export const useStudentAttendanceStore = defineStore(
     };
 
     const fetchAttendance = async () => {
+      loading.value = true;
       try {
         const { data } = await callAdminAuthnAxios("/attendance", null, null, "get");
         if (data) {
@@ -83,6 +87,8 @@ export const useStudentAttendanceStore = defineStore(
         }
       } catch (err) {
         console.error("Failed to fetch attendance", err);
+      } finally {
+        loading.value = false;
       }
     };
 
