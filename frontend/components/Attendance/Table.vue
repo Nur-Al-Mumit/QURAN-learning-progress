@@ -89,21 +89,17 @@
                   class="px-2 print:px-1 py-3 print:py-1.5 text-center"
                 >
                   <span
-                    :class="
-                      getAttendanceStatus(student.id, date) === 'present'
-                        ? 'text-green-600'
-                        : getAttendanceStatus(student.id, date) === 'recording'
-                        ? 'text-blue-600'
-                        : 'text-red-600'
-                    "
+                    :class="{
+                      'text-green-600': getAttendanceStatus(student.id, date) === 'present',
+                      'text-blue-600': getAttendanceStatus(student.id, date) === 'recording',
+                      'text-red-600': getAttendanceStatus(student.id, date) === 'absent',
+                      'text-gray-400': getAttendanceStatus(student.id, date) === 'upcoming'
+                    }"
                   >
-                    {{
-                      getAttendanceStatus(student.id, date) === "present"
-                        ? "✓"
-                        : getAttendanceStatus(student.id, date) === "recording"
-                        ? "◯"
-                        : "✗"
-                    }}
+                    <template v-if="getAttendanceStatus(student.id, date) === 'present'">✓</template>
+                    <template v-else-if="getAttendanceStatus(student.id, date) === 'recording'">◯</template>
+                    <template v-else-if="getAttendanceStatus(student.id, date) === 'upcoming'">-</template>
+                    <template v-else>✗</template>
                   </span>
                 </td>
                 <td
@@ -209,6 +205,16 @@
     );
   });
 
+  const activeDates = computed(() => {
+    const dates = new Set();
+    Object.values(studentAttendanceStore.attendance).forEach(studentRecords => {
+      Object.keys(studentRecords).forEach(date => {
+        dates.add(date);
+      });
+    });
+    return dates;
+  });
+
   const distributePercentages = (counts) => {
     const total = counts.reduce((sum, count) => sum + count, 0);
 
@@ -239,6 +245,29 @@
     return basePercentages;
   };
 
+  const getAttendanceStatus = (studentId, date) => {
+    const studentAttendance = studentAttendanceStore.attendance[studentId] || {};
+    const status = studentAttendance[date];
+    
+    if (status) return status;
+
+    // If the date has ANY attendance recorded for ANY student, it's no longer "upcoming"
+    if (activeDates.value.has(date)) {
+      return "absent";
+    }
+
+    // If no status and no one marked yet, check if date is in the future
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const checkDate = new Date(date);
+    
+    if (checkDate > today) {
+      return "upcoming";
+    }
+    
+    return "absent";
+  };
+
   const getStudentStats = (studentId) => {
     const studentAttendance =
       studentAttendanceStore.attendance[studentId] || {};
@@ -249,11 +278,12 @@
     let recording = 0;
 
     relevantDates.forEach((date) => {
-      if (studentAttendance[date] === "present") {
+      const status = getAttendanceStatus(studentId, date);
+      if (status === "present") {
         present++;
-      } else if (studentAttendance[date] === "recording") {
+      } else if (status === "recording") {
         recording++;
-      } else {
+      } else if (status === "absent") {
         absent++;
       }
     });

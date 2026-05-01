@@ -2,11 +2,13 @@ const express = require('express');
 const router = express.Router();
 const {
   markAttendance,
-  getClassAttendance
+  bulkMarkAttendance,
+  getAllAttendance
 } = require('../controllers/attendanceController');
 const { protect, authorize } = require('../middleware/authMiddleware');
 
+router.get('/', protect, authorize('admin', 'teacher'), getAllAttendance);
 router.post('/', protect, authorize('admin', 'teacher'), markAttendance);
-router.get('/class/:classId', protect, authorize('admin', 'teacher'), getClassAttendance);
+router.post('/bulk', protect, authorize('admin', 'teacher'), bulkMarkAttendance);
 
 module.exports = router;

@@ -2,31 +2,33 @@ const mongoose = require('mongoose');
 
 const attendanceSchema = new mongoose.Schema({
   class: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Class',
-    required: true
+    type: String, // We'll use a string ID or name for now, e.g., 'quran-class'
+    default: 'quran-class'
   },
   student: {
-    type: mongoose.Schema.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
     required: true
   },
   date: {
-    type: Date,
-    default: Date.now
+    type: String, // Format: YYYY-MM-DD
+    required: true
   },
   status: {
     type: String,
-    enum: ['present', 'absent', 'late', 'excused'],
-    required: true
+    enum: ['present', 'absent', 'recording'],
+    default: 'present'
   },
   remarks: {
-    type: String,
-    trim: true
+    type: String
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now
   }
 });
 
-// Create index to prevent duplicate attendance for same student in same class on same day
-attendanceSchema.index({ class: 1, student: 1, date: 1 }, { unique: true });
+// Compound index to ensure one record per student per date
+attendanceSchema.index({ student: 1, date: 1 }, { unique: true });
 
 module.exports = mongoose.model('Attendance', attendanceSchema);

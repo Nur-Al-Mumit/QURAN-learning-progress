@@ -147,12 +147,26 @@
     studentAttendanceStore.attendance[studentId][date] = status;
   };
 
+  const getAttendanceStatus = (studentId, date) => {
+    return studentAttendanceStore.attendance[studentId]?.[date] || "";
+  };
+
   function closeModal() {
     modalRef.value.handleClose();
   }
 
-  function saveAttendance() {
-    modalRef.value.handleClose();
+  async function saveAttendance() {
+    if (!selectedDateForAttendance.value) {
+      alert("Please select a date first");
+      return;
+    }
+    
+    const success = await studentAttendanceStore.saveAttendance(selectedDateForAttendance.value);
+    if (success) {
+      modalRef.value.handleClose();
+    } else {
+      alert("Failed to save attendance. Please try again.");
+    }
   }
 
   watch(

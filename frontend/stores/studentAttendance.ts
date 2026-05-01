@@ -67,6 +67,48 @@ export const useStudentAttendanceStore = defineStore(
       return false;
     };
 
+    const fetchAttendance = async () => {
+      try {
+        const { data } = await callAdminAuthnAxios("/attendance", null, null, "get");
+        if (data) {
+          const formattedAttendance = {};
+          data.forEach(record => {
+            const studentId = record.student;
+            if (!formattedAttendance[studentId]) {
+              formattedAttendance[studentId] = {};
+            }
+            formattedAttendance[studentId][record.date] = record.status;
+          });
+          attendance.value = formattedAttendance;
+        }
+      } catch (err) {
+        console.error("Failed to fetch attendance", err);
+      }
+    };
+
+    const saveAttendance = async (date: string) => {
+      try {
+        const records = [];
+        Object.keys(attendance.value).forEach(studentId => {
+          if (attendance.value[studentId][date]) {
+            records.push({
+              studentId,
+              date,
+              status: attendance.value[studentId][date]
+            });
+          }
+        });
+
+        if (records.length > 0) {
+          const { data } = await callAdminAuthnAxios("/attendance/bulk", { records });
+          return !!data;
+        }
+      } catch (err) {
+        console.error("Failed to save attendance", err);
+      }
+      return false;
+    };
+
     return { 
       students, 
       classDates, 
@@ -75,7 +117,9 @@ export const useStudentAttendanceStore = defineStore(
       fetchStudents,
       fetchClassDates,
       addClassDate,
-      removeClassDate
+      removeClassDate,
+      fetchAttendance,
+      saveAttendance
     };
   }
 );

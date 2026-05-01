@@ -1,32 +1,52 @@
 const Attendance = require('../models/Attendance');
 
-// @desc    Mark attendance
+// @desc    Mark attendance (Single or Multiple)
 // @route   POST /api/attendance
 // @access  Private/Teacher/Admin
 const markAttendance = async (req, res) => {
-  const { classId, studentId, status, remarks } = req.body;
+  const { studentId, date, status, remarks } = req.body;
 
   try {
-    const attendance = await Attendance.create({
-      class: classId,
-      student: studentId,
-      status,
-      remarks
-    });
+    const attendance = await Attendance.findOneAndUpdate(
+      { student: studentId, date },
+      { status, remarks },
+      { upsert: true, new: true, setDefaultsOnInsert: true }
+    );
 
-    res.status(201).json(attendance);
+    res.status(200).json(attendance);
   } catch (error) {
     res.status(400).json({ message: error.message });
   }
 };
 
-// @desc    Get attendance for a class
-// @route   GET /api/attendance/class/:classId
+// @desc    Bulk mark attendance
+// @route   POST /api/attendance/bulk
 // @access  Private/Teacher/Admin
-const getClassAttendance = async (req, res) => {
+const bulkMarkAttendance = async (req, res) => {
+  const { records } = req.body; // Array of { studentId, date, status }
+
   try {
-    const attendance = await Attendance.find({ class: req.params.classId })
-      .populate('student', 'name email');
+    const ops = records.map(record => ({
+      updateOne: {
+        filter: { student: record.studentId, date: record.date },
+        update: { status: record.status },
+        upsert: true
+      }
+    }));
+
+    await Attendance.bulkWrite(ops);
+    res.status(200).json({ message: 'Attendance updated successfully' });
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
+
+// @desc    Get all attendance
+// @route   GET /api/attendance
+// @access  Private/Teacher/Admin
+const getAllAttendance = async (req, res) => {
+  try {
+    const attendance = await Attendance.find();
     res.json(attendance);
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -35,5 +55,6 @@ const getClassAttendance = async (req, res) => {
 
 module.exports = {
   markAttendance,
-  getClassAttendance
+  bulkMarkAttendance,
+  getAllAttendance
 };
