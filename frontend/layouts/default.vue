@@ -87,14 +87,20 @@
     <!-- Main Content Area -->
     <!-- Main Content Area -->
     <div class="flex flex-1 flex-col min-w-0 overflow-hidden relative">
-      <!-- Mobile Toggle Button (Floating) -->
-      <button 
-        @click="isSidebarOpen = true"
-        class="lg:hidden fixed top-4 left-4 z-40 p-2.5 bg-white shadow-xl border border-gray-200 rounded-xl text-gray-600 hover:text-primary-600 active:scale-90 transition-all"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
-      </button>
-
+      
+      <!-- Top Mobile Navbar (Clean) -->
+      <header class="lg:hidden h-16 bg-white border-b border-gray-100 flex items-center px-4 shrink-0">
+        <button 
+          @click="isSidebarOpen = true"
+          class="p-2 rounded-xl text-gray-500 hover:bg-gray-50 active:scale-90 transition-all"
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+        </button>
+        <div class="flex-1"></div>
+        <div class="w-8 h-8 rounded-lg bg-primary-50 flex items-center justify-center text-[10px] font-bold text-primary-700 border border-primary-100">
+           {{ userInfo?.name?.[0]?.toUpperCase() }}
+        </div>
+      </header>
 
       <!-- Page Content -->
       <main class="flex-1 overflow-y-auto p-4 lg:p-10 custom-scrollbar">
