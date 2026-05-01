@@ -19,7 +19,6 @@
       </div>
       <div class="flex gap-2">
         <button class="btn-secondary text-xs py-2 px-3">Mark Bulk</button>
-        <button class="btn-primary text-xs py-2 px-3">Sync Now</button>
       </div>
     </div>
 
@@ -82,11 +81,6 @@
             </option>
           </select>
         </div>
-      </div>
-
-      <!-- Export Tools Section -->
-      <div class="mt-6 pt-4 border-t border-gray-100">
-        <AttendanceExport />
       </div>
     </div>
 
