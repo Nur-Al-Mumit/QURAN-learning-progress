@@ -50,14 +50,24 @@
       <div class="md:col-span-2 space-y-6">
         <!-- Highlights -->
         <div class="grid grid-cols-2 lg:grid-cols-3 gap-4">
-          <div v-for="stat in stats" :key="stat.label" class="pro-card p-5 relative overflow-hidden group hover:bg-white transition-colors">
+          <div v-for="stat in statsWithIcons" :key="stat.label" class="pro-card p-5 relative overflow-hidden group hover:bg-white transition-colors">
             <div class="absolute -right-4 -bottom-4 opacity-5 group-hover:opacity-10 group-hover:scale-110 transition-all duration-500 text-primary-900">
               <span v-html="stat.icon" class="w-24 h-24"></span>
             </div>
             <p class="text-[10px] font-bold text-gray-400 uppercase tracking-widest">{{ stat.label }}</p>
             <div class="mt-2 flex items-baseline gap-2">
               <span class="text-3xl font-black text-gray-900 tracking-tighter">{{ stat.value }}</span>
-              <span class="text-[10px] font-bold text-emerald-600 bg-emerald-50 px-1.5 py-0.5 rounded-lg border border-emerald-100" v-if="stat.trend">{{ stat.trend }}</span>
+              <span 
+                v-if="stat.change"
+                class="text-[10px] font-bold px-1.5 py-0.5 rounded-lg border"
+                :class="[
+                  stat.changeType === 'increase' ? 'text-emerald-600 bg-emerald-50 border-emerald-100' : 
+                  stat.changeType === 'decrease' ? 'text-red-600 bg-red-50 border-red-100' : 
+                  'text-gray-600 bg-gray-50 border-gray-100'
+                ]"
+              >
+                {{ stat.change }}
+              </span>
             </div>
           </div>
         </div>
@@ -69,18 +79,35 @@
             <button class="text-[10px] font-black text-primary-600 hover:text-primary-700 uppercase tracking-widest border border-primary-100 px-3 py-1 rounded-lg">History</button>
           </div>
           <div class="divide-y divide-gray-50">
-            <div v-for="i in 5" :key="i" class="p-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors cursor-pointer group">
-              <div class="w-11 h-11 rounded-xl bg-gray-50 flex-shrink-0 flex items-center justify-center font-black text-primary-600 border border-gray-100 group-hover:border-primary-200 group-hover:bg-primary-50 transition-all">
-                #{{ i }}
+            <div v-if="dashboardStore.recentActivity.length === 0" class="p-8 text-center text-gray-400 text-sm italic">
+              No recent activity found.
+            </div>
+            <div v-for="activity in dashboardStore.recentActivity" :key="activity.id" class="p-4 flex items-center gap-4 hover:bg-gray-50/50 transition-colors cursor-pointer group">
+              <div 
+                class="w-11 h-11 rounded-xl flex-shrink-0 flex items-center justify-center font-black border transition-all"
+                :class="[
+                  activity.status === 'present' ? 'bg-emerald-50 text-emerald-600 border-emerald-100' :
+                  activity.status === 'recording' ? 'bg-blue-50 text-blue-600 border-blue-100' :
+                  'bg-red-50 text-red-600 border-red-100'
+                ]"
+              >
+                {{ activity.status[0].toUpperCase() }}
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold text-gray-900 truncate">S{{ i }} Anonymous Student</p>
-                <p class="text-xs text-gray-400 truncate font-medium">Updated Progress • {{ i * 15 }}m ago</p>
+                <p class="text-sm font-bold text-gray-900 truncate">{{ activity.studentName }}</p>
+                <p class="text-xs text-gray-400 truncate font-medium">
+                  Marked as {{ activity.status }} • {{ formatTimeAgo(activity.updatedAt) }}
+                </p>
               </div>
               <div class="flex gap-1.5">
-                 <div class="w-2 h-2 rounded-full bg-emerald-500 shadow-sm shadow-emerald-200"></div>
-                 <div class="w-2 h-2 rounded-full bg-primary-300"></div>
-                 <div class="w-2 h-2 rounded-full bg-gray-200"></div>
+                 <div 
+                  class="w-2 h-2 rounded-full shadow-sm"
+                  :class="[
+                    activity.status === 'present' ? 'bg-emerald-500 shadow-emerald-200' :
+                    activity.status === 'recording' ? 'bg-blue-500 shadow-blue-200' :
+                    'bg-red-500 shadow-red-200'
+                  ]"
+                 ></div>
               </div>
             </div>
           </div>
@@ -95,42 +122,49 @@
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="w-5 h-5 text-emerald-400">
               <path fill-rule="evenodd" d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25ZM12.75 6a.75.75 0 0 0-1.5 0v6c0 .414.336.75.75.75h4.5a.75.75 0 0 0 0-1.5h-3.75V6Z" clip-rule="evenodd" />
             </svg>
-            Today's Schedule
+            Upcoming Schedule
           </h3>
           <div class="space-y-4 relative z-10">
-            <div v-for="i in 3" :key="i" class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex gap-4 hover:bg-white/20 transition-all">
+            <div v-if="dashboardStore.upcomingClasses.length === 0" class="text-center text-primary-300 text-xs italic py-4">
+              No classes scheduled.
+            </div>
+            <div v-for="cls in dashboardStore.upcomingClasses" :key="cls.date" class="bg-white/10 backdrop-blur-md p-3.5 rounded-2xl border border-white/20 flex gap-4 hover:bg-white/20 transition-all">
               <div class="text-center bg-white/20 px-3 py-2 rounded-xl font-black min-w-[55px] shadow-inner">
-                <p class="text-[9px] text-primary-200 uppercase tracking-tighter">Starts</p>
-                <p class="text-sm">0{{ i + 3 }}:30</p>
+                <p class="text-[9px] text-primary-200 uppercase tracking-tighter">{{ formatDay(cls.date) }}</p>
+                <p class="text-sm">{{ formatDayNum(cls.date) }}</p>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-sm font-bold truncate">General Tajweed G-{{ i }}</p>
-                <p class="text-[10px] text-primary-200 font-bold uppercase tracking-widest mt-1 opacity-80">{{ 8 + i }} Students</p>
+                <p class="text-sm font-bold truncate">{{ cls.note }}</p>
+                <p class="text-[10px] text-primary-200 font-bold uppercase tracking-widest mt-1 opacity-80">{{ formatMonth(cls.date) }}</p>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Performance Graph (Mockup) -->
+        <!-- Performance Graph -->
         <div class="pro-card p-5">
            <div class="flex items-center justify-between mb-4">
               <h3 class="text-[10px] font-black text-gray-400 uppercase tracking-widest">Attendance Health</h3>
-              <span class="text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Excellent</span>
+              <span class="text-emerald-600 text-xs font-bold bg-emerald-50 px-2 py-0.5 rounded-md">Real-time</span>
            </div>
            <div class="flex items-end gap-2 h-24 mb-2 px-1">
-              <div v-for="h in [60, 45, 90, 70, 85, 40, 95]" :key="h" 
+              <div v-if="dashboardStore.attendanceHealth.length === 0" class="flex-1 text-center text-[10px] text-gray-300 italic self-center">
+                Insufficient data.
+              </div>
+              <div v-for="item in dashboardStore.attendanceHealth" :key="item.date" 
                    class="flex-1 bg-gray-100 rounded-lg relative group cursor-help transition-all hover:bg-primary-100"
-                   :style="{ height: h + '%' }">
-                 <div class="absolute -top-6 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-[9px] px-1.5 py-0.5 rounded transition-all transition-all">
-                    {{ h }}%
+                   :style="{ height: (item.rate || 5) + '%' }">
+                 <div class="absolute -top-10 left-1/2 -translate-x-1/2 opacity-0 group-hover:opacity-100 bg-gray-900 text-white text-[9px] px-2 py-1 rounded-lg transition-all z-20 whitespace-nowrap">
+                    {{ item.rate }}% Attendance<br/>
+                    <span class="text-gray-400">{{ item.date }}</span>
                  </div>
-                 <div class="absolute bottom-0 left-0 right-0 bg-primary-500 rounded-lg transition-all" :style="{ height: (h/2) + '%' }"></div>
+                 <div class="absolute bottom-0 left-0 right-0 bg-primary-500 rounded-lg transition-all" :style="{ height: '100%' }"></div>
               </div>
            </div>
-           <p class="text-[10px] text-gray-400 font-medium text-center">Last 7 days activity trend</p>
+           <p class="text-[10px] text-gray-400 font-medium text-center">Trend of last {{ dashboardStore.attendanceHealth.length }} sessions</p>
         </div>
       </div>
-    </div>
+     </div>
   </div>
 </template>
 
@@ -139,6 +173,7 @@
     layout: 'default'
   });
 
+  const dashboardStore = useDashboardStore();
   const menuStore = useMenuStore();
   const userInfoStore = useUserInfoStore();
   const studentAttendanceStore = useStudentAttendanceStore();
@@ -152,26 +187,46 @@
     });
   });
 
-  const stats = [
-    { 
-      label: 'Active Students', 
-      value: computed(() => studentAttendanceStore.students?.length || 0), 
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>',
-      trend: '+1 new'
-    },
-    { 
-      label: 'Scheduled Classes', 
-      value: '24', 
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>',
-      trend: 'Normal'
-    },
-    { 
-      label: 'Engagement Rate', 
-      value: '84%', 
-      icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>',
-      trend: '+3%'
-    }
-  ];
+  const formatTimeAgo = (date) => {
+    const now = new Date();
+    const past = new Date(date);
+    const diffInMs = now - past;
+    const diffInMins = Math.floor(diffInMs / (1000 * 60));
+    const diffInHours = Math.floor(diffInMs / (1000 * 60 * 60));
+    const diffInDays = Math.floor(diffInMs / (1000 * 60 * 60 * 24));
+
+    if (diffInMins < 1) return 'Just now';
+    if (diffInMins < 60) return `${diffInMins}m ago`;
+    if (diffInHours < 24) return `${diffInHours}h ago`;
+    return `${diffInDays}d ago`;
+  };
+
+  const formatDay = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString('en-US', { weekday: 'short' });
+  };
+
+  const formatDayNum = (dateStr) => {
+    return new Date(dateStr).getDate();
+  };
+
+  const formatMonth = (dateStr) => {
+    return new Date(dateStr).toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+  };
+
+  // Dynamic stats from store
+  const statsWithIcons = computed(() => {
+    const icons = [
+      '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" /></svg>',
+      '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>'
+    ];
+    
+    return dashboardStore.stats.map((stat, index) => ({
+      ...stat,
+      label: stat.title,
+      icon: icons[index] || icons[0]
+    }));
+  });
 
   const quickActions = [
     {
@@ -182,8 +237,8 @@
       icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" /></svg>'
     },
     {
-      title: 'Roster',
-      desc: 'Students',
+      title: 'Students',
+      desc: 'Management',
       link: '/admin/students',
       color: 'bg-blue-50 text-blue-600 hover:bg-blue-100 ring-blue-100',
       icon: '<svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z" /></svg>'
@@ -206,8 +261,7 @@
 
   onMounted(async () => {
     await userInfoStore.getProfileInfo();
-    
-    // Initialize studentAttendanceStore if needed
-    // await studentAttendanceStore.fetchStudents();
+    await dashboardStore.fetchStats();
+    await studentAttendanceStore.fetchStudents();
   });
 </script>

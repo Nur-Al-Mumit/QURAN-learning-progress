@@ -17,6 +17,7 @@ app.use('/api/auth', require('./routes/authRoutes'));
 app.use('/api/attendance', require('./routes/attendanceRoutes'));
 app.use('/api/users', require('./routes/userRoutes'));
 app.use('/api/class-dates', require('./routes/classDateRoutes'));
+app.use('/api/dashboard', require('./routes/dashboardRoutes'));
 
 // Routes Placeholder
 app.get('/', (req, res) => {
