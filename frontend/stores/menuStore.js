@@ -33,11 +33,31 @@ export const useMenuStore = defineStore('MenuStore', () => {
     ];
   };
 
+  const setStudentMenu = () => {
+    links.value = [
+      {
+        title: "Dashboard",
+        icon: "Dashboard",
+        link: "/dashboard",
+      },
+      {
+        title: "My Attendance",
+        icon: "Circular",
+        link: "/attendance",
+      },
+      {
+        title: "Profile",
+        icon: "ViewProfile",
+        link: "/profile",
+      }
+    ];
+  };
+
   const clearMenu = () => {
     links.value = [];
   };
 
-  return { links, setAdminMenu, clearMenu }
+  return { links, setAdminMenu, setStudentMenu, clearMenu }
 }, {
   persist: {
     storage: piniaPluginPersistedstate.cookies(),

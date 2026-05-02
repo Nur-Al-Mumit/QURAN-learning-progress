@@ -10,11 +10,15 @@ export const useAdminAuthStore = defineStore('adminAuth', () => {
             loggedInData.value = data;
             isLoggedIn.value = true;
             
-            // Initialize menu
+            // Initialize menu based on role
             const menuStore = useMenuStore();
-            menuStore.setAdminMenu();
+            if (data.role === 'admin') {
+                menuStore.setAdminMenu();
+            } else {
+                menuStore.setStudentMenu();
+            }
             
-            return { success: true };
+            return { success: true, role: data.role };
         }
         return { success: false, error };
     }

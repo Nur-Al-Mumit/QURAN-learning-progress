@@ -164,10 +164,14 @@ const handleLogin = async () => {
   errorMsg.value = '';
   
   try {
-    const { success, error } = await authStore.login(form.email, form.password);
+    const { success, error, role } = await authStore.login(form.email, form.password);
     
     if (success) {
-      navigateTo('/admin/dashboard');
+      if (role === 'admin') {
+        navigateTo('/admin/dashboard');
+      } else {
+        navigateTo('/dashboard');
+      }
     } else {
       errorMsg.value = error?.message || 'Unauthorized: Please check your credentials and try again.';
     }
