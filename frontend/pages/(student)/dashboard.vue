@@ -1,8 +1,32 @@
 <template>
-  <div class="space-y-8">
+  <div class="space-y-6">
+    <!-- Welcome Header -->
+    <div class="pro-card p-6 bg-gradient-to-br from-emerald-600 to-emerald-800 text-white border-0 shadow-lg relative overflow-hidden">
+       <!-- Decorative circle -->
+      <div class="absolute -right-10 -top-10 w-40 h-40 bg-white/10 rounded-full blur-3xl"></div>
+      
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+        <div>
+          <h1 class="text-2xl md:text-3xl font-bold tracking-tight">Assalamu Alaikum, {{ userInfo?.name }}!</h1>
+          <p class="text-emerald-100/90 mt-1 text-sm md:text-base font-medium">Continue your journey of mastering the Quran.</p>
+        </div>
+        <div class="flex items-center gap-3 bg-white/10 p-2 rounded-2xl backdrop-blur-md self-start md:self-center border border-white/20 shadow-inner">
+          <div class="text-right">
+            <p class="text-[10px] font-bold uppercase tracking-widest text-emerald-200 opacity-80">Today's Date</p>
+            <p class="text-sm font-bold">{{ formattedDate }}</p>
+          </div>
+          <div class="w-10 h-10 rounded-xl bg-white/20 flex items-center justify-center shadow-lg transform rotate-3">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="2.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div>
-        <h1 class="text-3xl font-bold text-gray-900 tracking-tight">Learning Progress</h1>
+        <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Learning Progress</h2>
         <p class="text-gray-500 mt-1 text-sm">Track your mastery level for each Arabic letter.</p>
       </div>
       <div class="flex gap-3">
@@ -58,6 +82,17 @@
   definePageMeta({
     layout: "split",
   });
+
+  const userInfoStore = useUserInfoStore();
+  const userInfo = computed(() => userInfoStore.userInfo);
+
+  const formattedDate = computed(() => {
+    return new Date().toLocaleDateString('en-US', {
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric'
+    });
+  });
   const arabicLetters = ref([
     { char: "ا", accuracy: 50 },
     { char: "ب", accuracy: 70 },
@@ -102,7 +137,8 @@
   // Intersection Observer setup
   const letterRefs = ref([]);
 
-  onMounted(() => {
+  onMounted(async () => {
+    await userInfoStore.getProfileInfo();
     const observerOptions = {
       threshold: 0.1, // Trigger when 10% of element is visible
     };
