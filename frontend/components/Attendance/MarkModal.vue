@@ -170,7 +170,8 @@
   // State
   const modalRef = ref(null);
   const isOpen = ref(props.isModalOpen);
-  const selectedDateForAttendance = ref("");
+  const today = new Date().toISOString().split('T')[0];
+  const selectedDateForAttendance = ref(today);
   const tempAttendance = ref({}); // Local buffer: { [studentId]: status }
 
   // Initialize local buffer when date changes
@@ -178,13 +179,13 @@
     if (newDate) {
       const buffer = {};
       studentAttendanceStore.students.forEach(student => {
-        buffer[student.id] = studentAttendanceStore.attendance[student.id]?.[newDate] || "";
+        buffer[student.id] = studentAttendanceStore.attendance[student.id]?.[newDate] || "na";
       });
       tempAttendance.value = buffer;
     } else {
       tempAttendance.value = {};
     }
-  });
+  }, { immediate: true });
 
   const markAttendance = (studentId, date, status) => {
     tempAttendance.value[studentId] = status;
@@ -203,7 +204,7 @@
 
   function closeModal() {
     modalRef.value.handleClose();
-    selectedDateForAttendance.value = "";
+    selectedDateForAttendance.value = today;
     tempAttendance.value = {};
   }
 
@@ -226,7 +227,7 @@
     const success = await studentAttendanceStore.saveAttendance(date);
     if (success) {
       modalRef.value.handleClose();
-      selectedDateForAttendance.value = "";
+      selectedDateForAttendance.value = today;
       tempAttendance.value = {};
     } else {
       alert("Failed to save attendance. Please try again.");

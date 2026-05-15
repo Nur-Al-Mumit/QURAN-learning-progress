@@ -236,11 +236,11 @@
               :key="friday.date"
               class="h-32 border rounded-lg p-4 transition-all duration-200 hover:shadow-md"
               :class="{
-                'bg-green-50 border-green-200': friday.attended,
-                'bg-red-50 border-red-200':
-                  !friday.attended && friday.date < today,
-                'bg-gray-50 border-gray-200':
-                  !friday.attended && friday.date >= today,
+                'bg-green-50 border-green-200': friday.status === 'present',
+                'bg-blue-50 border-blue-200': friday.status === 'recording',
+                'bg-amber-50 border-amber-200': friday.status === 'na' && friday.date < today,
+                'bg-red-50 border-red-200': friday.status === 'absent' && friday.date < today,
+                'bg-gray-50 border-gray-200': friday.date >= today,
               }"
             >
               <span class="text-sm font-medium text-gray-700">
@@ -251,14 +251,20 @@
               </p>
               <p
                 class="text-xs mt-2"
-                :class="friday.attended ? 'text-green-600' : 'text-gray-500'"
+                :class="{
+                  'text-green-600': friday.status === 'present',
+                  'text-blue-600': friday.status === 'recording',
+                  'text-amber-600': friday.status === 'na',
+                  'text-red-600': friday.status === 'absent',
+                  'text-gray-500': friday.date >= today && friday.status === 'na'
+                }"
               >
                 {{
-                  friday.attended
-                    ? "Present"
-                    : friday.date < today
-                    ? "Absent"
-                    : "Upcoming"
+                  friday.status === 'present' ? "Present" :
+                  friday.status === 'recording' ? "Recording" :
+                  friday.status === 'absent' ? "Absent" :
+                  friday.status === 'na' ? (friday.date < today ? "N/A" : "Upcoming") :
+                  "Upcoming"
                 }}
               </p>
               <button
@@ -469,6 +475,7 @@
           day: "numeric",
         }),
         attended: attendanceRecord?.status === "present",
+        status: attendanceRecord?.status || "na",
         recordId: attendanceRecord?.id,
       });
       firstFriday.setDate(firstFriday.getDate() + 7);
