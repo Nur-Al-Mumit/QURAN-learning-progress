@@ -174,17 +174,22 @@
   const selectedDateForAttendance = ref(today);
   const tempAttendance = ref({}); // Local buffer: { [studentId]: status }
 
-  // Initialize local buffer when date changes
-  watch(selectedDateForAttendance, (newDate) => {
-    if (newDate) {
+  // Function to refresh the local buffer from the store
+  const refreshBuffer = (date) => {
+    if (date) {
       const buffer = {};
       studentAttendanceStore.students.forEach(student => {
-        buffer[student.id] = studentAttendanceStore.attendance[student.id]?.[newDate] || "na";
+        buffer[student.id] = studentAttendanceStore.attendance[student.id]?.[date] || "na";
       });
       tempAttendance.value = buffer;
     } else {
       tempAttendance.value = {};
     }
+  };
+
+  // Initialize local buffer when date changes
+  watch(selectedDateForAttendance, (newDate) => {
+    refreshBuffer(newDate);
   }, { immediate: true });
 
   const markAttendance = (studentId, date, status) => {
@@ -238,6 +243,10 @@
     () => props.isModalOpen,
     (value) => {
       isOpen.value = value;
+      if (value) {
+        // Refresh data when modal opens
+        refreshBuffer(selectedDateForAttendance.value);
+      }
     }
   );
 
