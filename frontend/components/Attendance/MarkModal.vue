@@ -110,6 +110,26 @@
                 >
                   Absent
                 </button>
+                <button
+                  @click="
+                    markAttendance(
+                      student.id,
+                      selectedDateForAttendance,
+                      'na'
+                    )
+                  "
+                  :class="
+                    getAttendanceStatus(
+                      student.id,
+                      selectedDateForAttendance
+                    ) === 'na'
+                      ? 'bg-amber-500 text-white'
+                      : 'bg-gray-200 text-gray-700'
+                  "
+                  class="px-3 py-1 rounded text-sm"
+                >
+                  N/A
+                </button>
               </div>
             </div>
           </div>

@@ -115,11 +115,13 @@
                       'text-green-600': getAttendanceStatus(student.id, date) === 'present',
                       'text-blue-600': getAttendanceStatus(student.id, date) === 'recording',
                       'text-red-600': getAttendanceStatus(student.id, date) === 'absent',
+                      'text-amber-500': getAttendanceStatus(student.id, date) === 'na',
                       'text-gray-400': getAttendanceStatus(student.id, date) === 'upcoming'
                     }"
                   >
                     <template v-if="getAttendanceStatus(student.id, date) === 'present'">✓</template>
                     <template v-else-if="getAttendanceStatus(student.id, date) === 'recording'">◯</template>
+                    <template v-else-if="getAttendanceStatus(student.id, date) === 'na'">—</template>
                     <template v-else-if="getAttendanceStatus(student.id, date) === 'upcoming'">-</template>
                     <template v-else>✗</template>
                   </span>
@@ -190,6 +192,10 @@
             <span class="flex items-center gap-1">
               <span class="text-red-600">✗</span>
               <span>Absent</span>
+            </span>
+            <span class="flex items-center gap-1">
+              <span class="text-amber-500">—</span>
+              <span>N/A</span>
             </span>
           </div>
         </div>
@@ -275,7 +281,7 @@
 
     // If the date has ANY attendance recorded for ANY student, it's no longer "upcoming"
     if (activeDates.value.has(date)) {
-      return "absent";
+      return "na";
     }
 
     // If no status and no one marked yet, check if date is in the future
@@ -287,7 +293,7 @@
       return "upcoming";
     }
     
-    return "absent";
+    return "na";
   };
 
   const getStudentStats = (studentId) => {
@@ -298,6 +304,7 @@
     let present = 0;
     let absent = 0;
     let recording = 0;
+    let na = 0;
 
     relevantDates.forEach((date) => {
       const status = getAttendanceStatus(studentId, date);
@@ -307,6 +314,8 @@
         recording++;
       } else if (status === "absent") {
         absent++;
+      } else if (status === "na") {
+        na++;
       }
     });
 
@@ -319,6 +328,7 @@
       present: presentWithRecording,
       absent,
       recording,
+      na,
       percentage: combinedPercentage,
       presentPercentage,
       recordingPercentage,
