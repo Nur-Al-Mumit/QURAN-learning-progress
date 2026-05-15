@@ -46,10 +46,10 @@
             <div
               v-for="student in studentAttendanceStore.students"
               :key="student.id"
-              class="w-full flex items-center justify-between p-3 bg-gray-50 rounded"
+              class="w-full flex flex-col gap-2 p-3 bg-gray-50 rounded"
             >
               <span class="font-medium">{{ student.name }}</span>
-              <div class="flex gap-2">
+              <div class="flex gap-1.5">
                 <button
                   @click="
                     markAttendance(
@@ -66,7 +66,7 @@
                       ? 'bg-green-600 text-white'
                       : 'bg-gray-200 text-gray-700'
                   "
-                  class="px-3 py-1 rounded text-sm"
+                  class="px-2 py-1 rounded text-xs whitespace-nowrap"
                 >
                   Present
                 </button>
@@ -86,7 +86,7 @@
                       ? 'bg-blue-600 text-white'
                       : 'bg-gray-200 text-gray-700'
                   "
-                  class="px-3 py-1 rounded text-sm"
+                  class="px-2 py-1 rounded text-xs whitespace-nowrap"
                 >
                   Recording
                 </button>
@@ -106,7 +106,7 @@
                       ? 'bg-red-600 text-white'
                       : 'bg-gray-200 text-gray-700'
                   "
-                  class="px-3 py-1 rounded text-sm"
+                  class="px-2 py-1 rounded text-xs whitespace-nowrap"
                 >
                   Absent
                 </button>
@@ -126,7 +126,7 @@
                       ? 'bg-amber-500 text-white'
                       : 'bg-gray-200 text-gray-700'
                   "
-                  class="px-3 py-1 rounded text-sm"
+                  class="px-2 py-1 rounded text-xs whitespace-nowrap"
                 >
                   N/A
                 </button>
