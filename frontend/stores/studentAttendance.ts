@@ -1,6 +1,14 @@
 import { defineStore } from "pinia";
 import { callAdminAuthnAxios } from "~/composables/adminAuthenticatedAxios";
 
+// API returns raw Mongo docs (_id, createdAt, ...); components work with a flat shape
+const normalizeStudent = (s: any) => ({
+  id: s?._id ?? s?.id ?? "",
+  name: s?.name ?? "",
+  email: s?.email ?? "",
+  createdAt: s?.createdAt ?? null,
+});
+
 export const useStudentAttendanceStore = defineStore(
   "StudentAttendance",
   () => {
@@ -14,11 +22,7 @@ export const useStudentAttendanceStore = defineStore(
       try {
         const { data, error } = await callAdminAuthnAxios("/users/students", null, null, "get");
         if (data) {
-          students.value = data.map(s => ({
-            id: s._id,
-            name: s.name,
-            email: s.email
-          }));
+          students.value = data.map(normalizeStudent);
         }
       } catch (err) {
         console.error("Failed to fetch students", err);
@@ -115,11 +119,11 @@ export const useStudentAttendanceStore = defineStore(
       return false;
     };
 
-    const addStudent = async (name: string) => {
+    const addStudent = async (name: string, email?: string) => {
       try {
-        const { data } = await callAdminAuthnAxios("/users/students", { name });
+        const { data } = await callAdminAuthnAxios("/users/students", { name, email: email || undefined });
         if (data) {
-          students.value.push(data);
+          students.value.push(normalizeStudent(data));
           return true;
         }
       } catch (err) {
@@ -128,13 +132,13 @@ export const useStudentAttendanceStore = defineStore(
       return false;
     };
 
-    const updateStudent = async (id: string, name: string) => {
+    const updateStudent = async (id: string, name: string, email?: string) => {
       try {
-        const { data } = await callAdminAuthnAxios(`/users/students/${id}`, { name }, null, "put");
+        const { data } = await callAdminAuthnAxios(`/users/students/${id}`, { name, email: email || undefined }, null, "put");
         if (data) {
-          const index = students.value.findIndex(s => s._id === id || s.id === id);
+          const index = students.value.findIndex(s => s.id === id);
           if (index !== -1) {
-            students.value[index] = data;
+            students.value[index] = normalizeStudent(data);
           }
           return true;
         }
