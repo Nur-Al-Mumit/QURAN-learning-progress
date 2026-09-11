@@ -98,8 +98,8 @@
   const menuStore = useMenuStore();
   const studentAttendanceStore = useStudentAttendanceStore();
 
-  // View options
-  const viewPeriod = ref("all");
+  // View options — default to the current month's classes
+  const viewPeriod = ref("monthly");
   const studentView = ref("all");
   const selectedMonth = ref("");
   const numberOfClasses = ref(7);
@@ -176,7 +176,11 @@
     });
 
     if (availableMonths.value.length > 0) {
-      selectedMonth.value = availableMonths.value[0].value;
+      // Prefer the current month; fall back to the most recent month that has classes
+      const now = new Date();
+      const currentMonthKey = `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, "0")}`;
+      const currentMonth = availableMonths.value.find((m) => m.value === currentMonthKey);
+      selectedMonth.value = currentMonth ? currentMonth.value : availableMonths.value[0].value;
     }
   });
 </script>
